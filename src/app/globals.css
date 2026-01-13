@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Design tokens (simple, modern, architecture-friendly) */
+:root {
+  --bg: 255 255 255;
+  --fg: 17 24 39; /* gray-900 */
+  --muted: 107 114 128; /* gray-500 */
+  --card: 249 250 251; /* gray-50 */
+  --border: 229 231 235; /* gray-200 */
+  --accent: 16 185 129; /* emerald-500 */
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  color: rgb(var(--fg));
+  background: rgb(var(--bg));
+}
+
+/* Better default selection */
+::selection {
+  background: rgba(16, 185, 129, 0.25);
+}

@@ -1,0 +1,21 @@
+import type { Metadata } from "next"
+import "./globals.css"
+import { SiteHeader } from "@/src/components/SiteHeader"
+import { SiteFooter } from "@/src/components/SiteFooter"
+
+export const metadata: Metadata = {
+  title: "AO Associates",
+  description: "Architecture • Sustainable Design • Net-Zero Strategies",
+}
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="min-h-dvh antialiased">
+        <SiteHeader />
+        <main className="pt-16">{children}</main>
+        <SiteFooter />
+      </body>
+    </html>
+  )
+}
