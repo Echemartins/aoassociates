@@ -168,7 +168,7 @@ export default async function HomePage() {
               preload="metadata"
               poster="/images/mirage/mirage2.jpg"
             >
-              <source src="/videos/aoassociates-walkthrough-cinematic-60s-exact.mp4" type="video/mp4" />
+              <source src="/videos/aoassociates-walkthrough-cinematic-60s-compressed-60s.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
