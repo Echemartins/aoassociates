@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"
+
+
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
 import { PostCard } from "@/src/components/PostCard"

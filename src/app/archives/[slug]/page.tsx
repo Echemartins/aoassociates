@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import { notFound } from "next/navigation"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
