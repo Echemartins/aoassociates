@@ -52,6 +52,10 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Manual URL inputs
+  const [manualUrl, setManualUrl] = useState("")
+  const [manualAlt, setManualAlt] = useState("Project image")
+
   const tagText = useMemo(() => data.tags.join(", "), [data.tags])
 
   useEffect(() => {
@@ -139,17 +143,38 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
     if (res.ok) window.location.href = "/admin/projects"
   }
 
+  function addManualImage() {
+    const url = manualUrl.trim()
+    if (!url) return
+    setData((d) => ({
+      ...d,
+      images: [
+        ...d.images,
+        {
+          url,
+          alt: manualAlt.trim() || "Project image",
+          caption: "",
+          credit: "",
+          notes: "",
+          order: d.images.length,
+        },
+      ],
+    }))
+    setManualUrl("")
+    setManualAlt("Project image")
+  }
+
   if (loading) {
     return (
-      <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-6">
+      <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] p-6 shadow-sm">
         Loading…
       </div>
     )
   }
 
   return (
-    <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-6">
-      <div className="flex items-end justify-between gap-4">
+    <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] p-6 shadow-sm">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-xl font-semibold">{mode === "create" ? "New Project" : "Edit Project"}</h1>
           <p className="mt-1 text-sm text-[rgb(var(--muted))]">
@@ -157,40 +182,45 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={save}
             disabled={saving}
-            className="rounded-full bg-[rgb(var(--fg))] px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
+            className="rounded-full border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-4 py-2 text-sm font-semibold text-[rgb(var(--accent))] transition-colors hover:bg-[rgb(var(--accent))] hover:text-white disabled:opacity-60"
           >
             {saving ? "Saving…" : "Save"}
           </button>
+
           {mode === "edit" ? (
             <button
               onClick={remove}
-              className="rounded-full border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+              className="rounded-full border border-red-200 bg-[rgb(var(--bg))] px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
             >
               Delete
             </button>
           ) : null}
+
           <Link
             href="/admin/projects"
-            className="rounded-full border border-[rgb(var(--border))] bg-white px-4 py-2 text-sm hover:bg-[rgb(var(--card))]"
+            className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm font-medium text-[rgb(var(--fg))] transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
           >
             Back
           </Link>
         </div>
       </div>
 
-      {error ? <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div> : null}
+      {error ? (
+        <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>
+      ) : null}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-12">
+        {/* Left: main fields */}
         <div className="lg:col-span-7">
           <Field label="Title">
             <input
               value={data.title}
               onChange={(e) => setData((d) => ({ ...d, title: e.target.value }))}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+              className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
           </Field>
 
@@ -198,7 +228,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             <input
               value={data.slug || ""}
               onChange={(e) => setData((d) => ({ ...d, slug: e.target.value }))}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+              className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
           </Field>
 
@@ -206,7 +236,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             <textarea
               value={data.summary || ""}
               onChange={(e) => setData((d) => ({ ...d, summary: e.target.value }))}
-              className="min-h-20 w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+              className="min-h-20 w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
           </Field>
 
@@ -215,7 +245,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
               <input
                 value={data.location || ""}
                 onChange={(e) => setData((d) => ({ ...d, location: e.target.value }))}
-                className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+                className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
               />
             </Field>
             <Field label="Year">
@@ -223,7 +253,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                 value={data.year ?? ""}
                 onChange={(e) => setData((d) => ({ ...d, year: e.target.value ? Number(e.target.value) : null }))}
                 type="number"
-                className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+                className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
               />
             </Field>
           </div>
@@ -233,14 +263,14 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
               <input
                 value={data.typology || ""}
                 onChange={(e) => setData((d) => ({ ...d, typology: e.target.value }))}
-                className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+                className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
               />
             </Field>
             <Field label="Client">
               <input
                 value={data.client || ""}
                 onChange={(e) => setData((d) => ({ ...d, client: e.target.value }))}
-                className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+                className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
               />
             </Field>
           </div>
@@ -249,7 +279,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             <input
               value={data.services || ""}
               onChange={(e) => setData((d) => ({ ...d, services: e.target.value }))}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+              className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
           </Field>
 
@@ -257,7 +287,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             <input
               value={data.sustainability || ""}
               onChange={(e) => setData((d) => ({ ...d, sustainability: e.target.value }))}
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+              className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
           </Field>
 
@@ -270,7 +300,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                   tags: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
                 }))
               }
-              className="w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 text-sm"
+              className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
           </Field>
 
@@ -278,11 +308,12 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             <textarea
               value={data.body || ""}
               onChange={(e) => setData((d) => ({ ...d, body: e.target.value }))}
-              className="min-h-64 w-full rounded-xl border border-[rgb(var(--border))] px-4 py-2 font-mono text-xs"
+              className="min-h-64 w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 font-mono text-xs"
             />
           </Field>
         </div>
 
+        {/* Right: publishing + images */}
         <div className="lg:col-span-5">
           <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-5">
             <div className="text-sm font-semibold">Publishing</div>
@@ -290,40 +321,77 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
               <select
                 value={data.status}
                 onChange={(e) => setData((d) => ({ ...d, status: e.target.value as any }))}
-                className="rounded-xl border border-[rgb(var(--border))] bg-white px-4 py-2 text-sm"
+                className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
               >
                 <option value="DRAFT">Draft</option>
                 <option value="PUBLISHED">Published</option>
               </select>
-              <div className="text-xs text-[rgb(var(--muted))]">
-                Draft projects won’t appear on the public site.
-              </div>
+              <div className="text-xs text-[rgb(var(--muted))]">Draft projects won’t appear on the public site.</div>
             </div>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-[rgb(var(--border))] bg-white p-5">
+          <div className="mt-6 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] p-5">
             <div className="text-sm font-semibold">Gallery Images</div>
             <p className="mt-1 text-xs text-[rgb(var(--muted))]">
               Add images with caption/credit/notes. The public project page shows these per photo.
             </p>
 
-            <div className="mt-4">
-              <ImageUploader
-                onUploaded={(url) => {
-                  setData((d) => ({
-                    ...d,
-                    images: [
-                      ...d.images,
-                      { url, alt: "Project image", caption: "", credit: "", notes: "", order: d.images.length },
-                    ],
-                  }))
-                }}
-              />
+            {/* Upload block (visually obvious) */}
+            <div className="mt-4 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-4">
+              <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">Upload</div>
+              <div className="mt-2">
+                {/* If ImageUploader uses a hidden input, this container will still frame it nicely */}
+                <ImageUploader
+                  onUploaded={(url) => {
+                    setData((d) => ({
+                      ...d,
+                      images: [
+                        ...d.images,
+                        { url, alt: "Project image", caption: "", credit: "", notes: "", order: d.images.length },
+                      ],
+                    }))
+                  }}
+                />
+              </div>
+              <p className="mt-2 text-xs text-[rgb(var(--muted))]">
+                Tip: If the file button is still subtle, paste the URL manually below.
+              </p>
             </div>
 
+            {/* Manual URL input (you requested) */}
+            <div className="mt-4 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-4">
+              <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                Add by URL
+              </div>
+
+              <div className="mt-2 grid gap-2">
+                <input
+                  value={manualUrl}
+                  onChange={(e) => setManualUrl(e.target.value)}
+                  placeholder="https://… or /uploads/…"
+                  className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
+                />
+                <input
+                  value={manualAlt}
+                  onChange={(e) => setManualAlt(e.target.value)}
+                  placeholder="Alt text (recommended)"
+                  className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
+                />
+
+                <button
+                  type="button"
+                  onClick={addManualImage}
+                  className="rounded-full border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-4 py-2 text-sm font-semibold text-[rgb(var(--accent))] transition-colors hover:bg-[rgb(var(--accent))] hover:text-white"
+                >
+                  Add Image
+                </button>
+              </div>
+            </div>
+
+            {/* Image list */}
             <div className="mt-4 grid gap-4">
               {data.images.map((img, idx) => (
-                <div key={idx} className="rounded-2xl border border-[rgb(var(--border))] p-4">
+                <div key={idx} className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] p-4">
                   <div className="text-xs text-[rgb(var(--muted))] break-all">{img.url}</div>
 
                   <div className="mt-3 grid gap-2">
@@ -338,7 +406,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                         })
                       }}
                       placeholder="Alt text"
-                      className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                      className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
                     />
 
                     <input
@@ -352,7 +420,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                         })
                       }}
                       placeholder="Caption"
-                      className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                      className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
                     />
 
                     <input
@@ -366,7 +434,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                         })
                       }}
                       placeholder="Credit (optional)"
-                      className="rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                      className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
                     />
 
                     <textarea
@@ -380,10 +448,10 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                         })
                       }}
                       placeholder="Notes (optional)"
-                      className="min-h-20 rounded-xl border border-[rgb(var(--border))] px-3 py-2 text-sm"
+                      className="min-h-20 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
                     />
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => {
                           setData((d) => {
@@ -392,10 +460,11 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                             return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
                           })
                         }}
-                        className="rounded-full border border-[rgb(var(--border))] px-3 py-1 text-sm hover:bg-[rgb(var(--card))]"
+                        className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
                       >
                         Up
                       </button>
+
                       <button
                         onClick={() => {
                           setData((d) => {
@@ -404,10 +473,11 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                             return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
                           })
                         }}
-                        className="rounded-full border border-[rgb(var(--border))] px-3 py-1 text-sm hover:bg-[rgb(var(--card))]"
+                        className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
                       >
                         Down
                       </button>
+
                       <button
                         onClick={() => {
                           setData((d) => {
@@ -416,7 +486,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                             return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
                           })
                         }}
-                        className="ml-auto rounded-full border border-red-200 px-3 py-1 text-sm text-red-700 hover:bg-red-50"
+                        className="ml-auto rounded-full border border-red-200 bg-[rgb(var(--bg))] px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
                       >
                         Remove
                       </button>
@@ -424,9 +494,8 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
                   </div>
                 </div>
               ))}
-              {!data.images.length ? (
-                <div className="text-sm text-[rgb(var(--muted))]">No images yet.</div>
-              ) : null}
+
+              {!data.images.length ? <div className="text-sm text-[rgb(var(--muted))]">No images yet.</div> : null}
             </div>
           </div>
         </div>

@@ -1,14 +1,15 @@
 import type { NextAuthOptions } from "next-auth"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import { prisma } from "@/src/lib/prisma"
 import bcrypt from "bcryptjs"
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
-  session: { strategy: "database" },
+  // Credentials requires JWT sessions
+  session: { strategy: "jwt" },
+
   pages: { signIn: "/admin/login" },
+
   providers: [
     CredentialsProvider({
       name: "Admin Login",
@@ -23,7 +24,7 @@ export const authOptions: NextAuthOptions = {
         if (!email || !password) return null
 
         const user = await prisma.user.findUnique({ where: { email } })
-        if (!user?.passwordHash) return null
+        if (!user?.passwordHash || !user.email) return null
 
         const ok = await bcrypt.compare(password, user.passwordHash)
         if (!ok) return null
@@ -37,16 +38,33 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
   callbacks: {
-    async session({ session, user }) {
+    async jwt({ token, user }) {
+      // On sign-in, persist id/role into JWT
+      if (user) {
+        token.id = (user as any).id
+        token.role = (user as any).role
+      }
+      return token
+    },
+
+    async session({ session, token }) {
+      // Expose id/role on session.user
       if (session.user) {
-        ;(session.user as any).id = (user as any).id
-        ;(session.user as any).role = (user as any).role
+        ;(session.user as any).id = token.id
+        ;(session.user as any).role = token.role
       }
       return session
     },
   },
+
   secret: process.env.NEXTAUTH_SECRET,
 }
 
-export const authHandler = NextAuth(authOptions)
+// If you are using App Router route handler:
+const handler = NextAuth(authOptions)
+export { handler as GET, handler as POST }
+
+// If you were importing `authHandler` elsewhere, you can also keep:
+export const authHandler = handler

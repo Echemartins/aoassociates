@@ -34,25 +34,32 @@ const ProjectUpsert = z.object({
     .default([]),
 })
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+type Ctx = { params: Promise<{ id: string }> }
+
+export async function GET(_: Request, { params }: Ctx) {
   await requireAdmin()
+  const { id } = await params
+
   const project = await prisma.project.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { images: { orderBy: { order: "asc" } } },
   })
+
   return NextResponse.json({ project })
 }
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(req: Request, { params }: Ctx) {
   await requireAdmin()
+  const { id } = await params
+
   const data = ProjectUpsert.parse(await req.json())
   const slug = (data.slug?.trim() || toSlug(data.title)).toLowerCase()
 
   // Replace images (simplest reliable approach)
-  await prisma.projectImage.deleteMany({ where: { projectId: params.id } })
+  await prisma.projectImage.deleteMany({ where: { projectId: id } })
 
   const updated = await prisma.project.update({
-    where: { id: params.id },
+    where: { id },
     data: {
       slug,
       title: data.title,
@@ -83,8 +90,10 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
   return NextResponse.json({ project: updated })
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+export async function DELETE(_: Request, { params }: Ctx) {
   await requireAdmin()
-  await prisma.project.delete({ where: { id: params.id } })
+  const { id } = await params
+
+  await prisma.project.delete({ where: { id } })
   return NextResponse.json({ ok: true })
 }

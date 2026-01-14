@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { SignOutButton } from "@/src/components/admin/SignOutButton"
 
 const items = [
   { href: "/admin", label: "Dashboard" },
@@ -22,6 +23,9 @@ export function AdminNav() {
             {i.label}
           </Link>
         ))}
+      </div>
+      <div className="mt-3">
+        <SignOutButton />
       </div>
     </nav>
   )

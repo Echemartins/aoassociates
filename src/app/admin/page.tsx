@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/prisma"
-import { requireAdmin } from "@/lib/admin"
+import { prisma } from "@/src/lib/prisma"
+import { requireAdmin } from "@/src/lib/admin"
 
 export const runtime = "nodejs"
 

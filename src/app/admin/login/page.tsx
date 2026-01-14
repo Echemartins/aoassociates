@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
-import { Container } from "@/components/Container"
+import { Container } from "@/src/components/Container"
 
 export default function AdminLoginPage() {
   const from = useSearchParams().get("from") || "/admin"
