@@ -7,7 +7,7 @@ export function ProjectCard({ project }: { project: any }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group overflow-hidden rounded-2xl border border-[rgb(var(--border))] bg-white hover:shadow-sm"
+      className="group overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-white hover:shadow-sm"
     >
       <div className="relative aspect-[4/3] w-full bg-[rgb(var(--card))]">
         {cover ? (

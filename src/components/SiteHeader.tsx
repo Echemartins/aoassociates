@@ -74,8 +74,8 @@ export function SiteHeader() {
               className={[
                 "rounded-full border px-4 py-0.5 text-sm font-medium transition-colors",
                 item.active
-                  ? "border-[rgb(var(--accent))] bg-[rgb(var(--accent))] text-white hover:bg-[rgb(var(--accent-soft))]"
-                  : "border-[rgb(var(--border))] bg-[rgb(var(--accent-soft))] text-[rgb(var(--muted))] hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--bg))] hover:text-[rgb(var(--accent))]",
+                  ? " bg-yellow-700/90 text-white hover:bg-[rgb(var(--accent-soft))]"
+                  : "border-[rgb(var(--border))] bg-[rgb(36,107,12)] text-white hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--bg))] hover:text-[rgb(var(--accent))]",
               ].join(" ")}
             >
               {item.label}

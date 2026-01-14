@@ -32,7 +32,7 @@ export default async function HomePage() {
         <Container className="py-1 sm:py-3">
           {/* Hero Image (with overlay content INSIDE) */}
           <div className="relative overflow-hidden rounded-sm border border-[rgb(var(--border))] bg-[rgb(var(--card))] shadow-sm">
-            <div className="relative aspect-[18/10] w-full md:aspect-[28/10]">
+            <div className="relative aspect-[12/10] w-full md:aspect-[28/10]">
               <Image
                 src="/images/hero.png"
                 alt="AO + Associates hero image"
@@ -67,10 +67,10 @@ export default async function HomePage() {
 
                     {/* Center title + tagline */}
                     <div className="text-center">
-                      <div className="text-base font-semibold tracking-tight text-white/60 sm:text-2xl">
+                      <div className="text-base font-semibold tracking-tight text-white/70 sm:text-2xl">
                         AO + Associates Inc.
                       </div>
-                      <div className="mt-1 text-[11px] leading-snug text-white/40 sm:text-sm">
+                      <div className="mt-1 text-[11px] leading-snug text-white/50 sm:text-sm">
                         Environmentally responsible, resource-efficient, green &amp; net-zero architecture.
                       </div>
                     </div>
@@ -120,7 +120,7 @@ export default async function HomePage() {
               </div>
 
               {/* CTA */}
-              <div className="mt-6 flex flex-wrap gap-3">
+              {/* <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/projects"
                   className="rounded-full bg-[rgb(var(--fg))] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
@@ -139,11 +139,46 @@ export default async function HomePage() {
                 >
                   Contact
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </Container>
       </section>
+
+      {/* Walkthrough Video */}
+      <section className="border-b max-w-4xl mx-auto border-[rgb(var(--border))] bg-[rgb(var(--bg))]">
+        <Container className="py-10">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              {/* Small label */}
+              
+
+              <p className="mt-1 text-sm text-[rgb(var(--muted))]">
+                A quick tour of our sustainability-first approach and recent work.
+              </p>
+            </div>
+
+          </div>
+
+          <div className="mt-3 max-w-4xl mx-auto overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-red-500 shadow-sm">
+            <video
+              className="w-full max-h-110 object-cover"
+              controls
+              playsInline
+              preload="metadata"
+              poster="/images/mirage/mirage2.jpg"
+            >
+              <source src="/videos/aoassociates-walkthrough-cinematic-60s-exact.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+
+          <span className="inline-flex items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--card))] px-3 py-1 text-xs font-semibold text-[rgb(var(--muted))]">
+                1-minute walkthrough
+              </span>
+        </Container>
+      </section>
+
 
       {/* Featured Projects */}
       <section className="bg-[rgb(var(--bg))]">
