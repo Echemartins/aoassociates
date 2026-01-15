@@ -61,7 +61,7 @@ export function SiteHeader() {
             priority
             className="h-14 w-auto object-contain"
           />
-          <span className="hidden text-xs text-[rgb(var(--muted))] sm:inline">
+          <span className="hidden text-xs font-medium text-[rgb(var(--muted))] sm:inline">
             Green Architecture &amp; Planning
           </span>
         </Link>

@@ -1,19 +1,25 @@
-
 export const dynamic = "force-dynamic"
+export const revalidate = 0
+
 import Link from "next/link"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
 import { ProjectCard } from "@/src/components/ProjectCard"
 
-export const revalidate = 60
+type SP = Record<string, string | string[] | undefined>
+
+function first(v: string | string[] | undefined) {
+  return Array.isArray(v) ? v[0] ?? "" : v ?? ""
+}
 
 export default async function ProjectsPage({
   searchParams,
 }: {
-  searchParams?: { q?: string; tag?: string }
+  searchParams?: Promise<SP>
 }) {
-  const q = (searchParams?.q || "").trim()
-  const tag = (searchParams?.tag || "").trim()
+  const sp = searchParams ? await searchParams : {}
+  const q = first(sp.q).trim()
+  const tag = first(sp.tag).trim()
 
   const projects = await prisma.project.findMany({
     where: {
@@ -47,9 +53,6 @@ export default async function ProjectsPage({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Projects</h1>
-          <p className="mt-1 text-sm text-[rgb(var(--muted))]">
-            Case studies with story + photo details.
-          </p>
         </div>
 
         <form className="flex w-full gap-2 sm:w-auto" action="/projects" method="get">
@@ -66,30 +69,39 @@ export default async function ProjectsPage({
       </div>
 
       {tags.length ? (
-        <div className="mt-6 flex flex-wrap gap-2">
-          <Link
-            href="/projects"
-            className={`rounded-full border px-3 py-1 text-xs ${
-              !tag ? "border-[rgb(var(--fg))] text-[rgb(var(--fg))]" : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
-            }`}
-          >
-            All
-          </Link>
-          {tags.map((t) => (
+        <>
+          <div className="mt-6 flex flex-wrap gap-2">
             <Link
-              key={t}
-              href={`/projects?tag=${encodeURIComponent(t)}`}
-              className={`rounded-full border px-3 py-1 text-xs ${
-                tag === t ? "border-[rgb(var(--fg))] text-[rgb(var(--fg))]" : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
+              href="/projects"
+              className={`rounded-full border px-4 py-1 text-xs ${
+                !tag
+                  ? "border-[rgb(var(--fg))] text-[rgb(var(--fg))]"
+                  : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
               }`}
             >
-              {t}
+              All
             </Link>
-          ))}
-        </div>
+
+            {tags.map((t) => (
+              <Link
+                key={t}
+                href={`/projects?tag=${encodeURIComponent(t)}`}
+                className={`rounded-full border px-3 py-1 text-xs ${
+                  tag === t
+                    ? "border-[rgb(var(--fg))] text-[rgb(var(--fg))]"
+                    : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
+                }`}
+              >
+                {t}
+              </Link>
+            ))}
+          </div>
+
+          <p className="mt-2 text-xs font-medium text-[rgb(var(--muted))]">select a category.</p>
+        </>
       ) : null}
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {projects.map((p) => (
           <ProjectCard key={p.id} project={p as any} />
         ))}

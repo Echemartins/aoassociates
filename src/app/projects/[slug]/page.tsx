@@ -54,7 +54,7 @@ export default async function ProjectDetailPage({
             {project.tags.map((t: string) => (
               <span
                 key={t}
-                className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--card))] px-3 py-1 text-xs text-[rgb(var(--muted))]"
+                className="rounded bg-[rgb(var(--card))] shadow-sm px-3 py-1 text-xs text-green-600"
               >
                 {t}
               </span>
@@ -62,15 +62,15 @@ export default async function ProjectDetailPage({
           </div>
         ) : null}
         {/* Location + Year (same line) */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[rgb(var(--muted))]">
-          {project.location ? <span>• {project.location}</span> : null}
+        <div className="mt-3 flex flex-wrap items-center text-yellow-600 font-medium gap-x-5 gap-y-2 text-sm text-[rgb(var(--muted))]">
+          {project.location ? <span> {project.location}</span> : null}
           {project.year ? <span>• {project.year}</span> : null}
         </div>
 
         {/* Typology (separate line) */}
         {project.typology ? (
-          <div className="mt-3 text-sm text-[rgb(var(--muted))]">
-            <span className="font-medium text-[rgb(var(--fg))]">Typology:</span>{" "}
+          <div className="mt-3 text-xs font-medium text-[rgb(var(--muted))]">
+            {/* <span className="font-medium text-[rgb(var(--fg))]">Typology:</span>{" "} */}
             <span>{project.typology}</span>
           </div>
         ) : null}
@@ -84,7 +84,7 @@ export default async function ProjectDetailPage({
           <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h2 className="text-xl font-semibold">Gallery</h2>
-              <p className="mt-1 text-sm text-[rgb(var(--muted))]">
+              <p className="mt-1 text-xs text-[rgb(var(--muted))]">
                 Click any image to view details (caption, credit, notes). Use arrows to navigate gallery.
               </p>
             </div>

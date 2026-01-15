@@ -90,10 +90,10 @@ export default async function HomePage() {
               {/* Office + Sustainability */}
               <div className="grid gap-4 lg:grid-cols-2">
                 <div className="flex flex-col gap-4 rounded-xl bg-[rgb(var(--card))] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <div className="text-xs font-bold uppercase tracking-wide text-gray-800">
                     Office
                   </div>
-                  <div className="mt-2 text-sm text-[rgb(var(--muted))]">
+                  <div className="mt-2 text-sm font-medium text-[rgb(var(--muted))]">
                     1270 Av. of The Americas
                     <br />
                     7th Floor, #1154
@@ -101,14 +101,14 @@ export default async function HomePage() {
                     New York, NY 10020
                   </div>
 
-                  <p className="text-gray-600">Environmentally responsible, Resource Efficient, Green &amp; Net-Zero Architecture.</p>
+                  <p className="text-gray-600 font-medium">Environmentally responsible, Resource Efficient, Green &amp; Net-Zero Architecture.</p>
                 </div>
 
                 <div className="rounded-xl bg-[rgb(var(--card))] p-4">
-                  <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  <div className="text-xs font-bold uppercase tracking-wide text-gray-800">
                     Sustainability focus
                   </div>
-                  <ul className="mt-2 grid gap-2 text-sm text-[rgb(var(--muted))]">
+                  <ul className="mt-2 grid gap-2 text-sm font-medium text-[rgb(var(--muted))]">
                     <li>• Renewable clean energy sources</li>
                     <li>• Energy efficiency</li>
                     <li>• Rainwater harvest, recycle &amp; reuse</li>
@@ -153,7 +153,7 @@ export default async function HomePage() {
               {/* Small label */}
               
 
-              <p className="mt-1 text-sm text-[rgb(var(--muted))]">
+              <p className="mt-1 text-sm font-medium text-[rgb(var(--muted))]">
                 A quick tour of our sustainability-first approach and recent work.
               </p>
             </div>
@@ -173,7 +173,7 @@ export default async function HomePage() {
             </video>
           </div>
 
-          <span className="inline-flex items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--card))] px-3 py-1 text-xs font-semibold text-[rgb(var(--muted))]">
+          <span className="inline-flex items-center rounded bg-[rgb(var(--card))] px-3 py-1 text-xs font-semibold text-[rgb(var(--muted))]">
                 1-minute walkthrough
               </span>
         </Container>
@@ -185,12 +185,12 @@ export default async function HomePage() {
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
             <h2 className="text-xl font-semibold">Featured Projects</h2>
-            <Link href="/projects" className="text-sm text-[rgb(var(--muted))] hover:text-[rgb(var(--fg))]">
+            <Link href="/projects" className="text-sm text-yellow-700 font-medium hover:text-[rgb(var(--fg))]">
               View all →
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {projects.map((p) => (
               <ProjectCard key={p.id} project={p as any} />
             ))}
@@ -203,7 +203,7 @@ export default async function HomePage() {
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
             <h2 className="text-xl font-semibold">Latest Archives</h2>
-            <Link href="/archives" className="text-sm text-[rgb(var(--muted))] hover:text-[rgb(var(--fg))]">
+            <Link href="/archives" className="text-md font-medium text-yellow-700 hover:text-[rgb(var(--fg))]">
               View all →
             </Link>
           </div>

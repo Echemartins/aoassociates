@@ -53,7 +53,7 @@ export function ProjectGallery({ images }: { images: GalleryImage[] }) {
   return (
     <div>
       {/* Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-2 grid-col-2 sm:grid-cols-3 lg:grid-cols-4">
         {items.map((img, i) => (
           <button
             key={img.id ?? img.url}
@@ -62,7 +62,7 @@ export function ProjectGallery({ images }: { images: GalleryImage[] }) {
               setIdx(i)
               setOpen(true)
             }}
-            className="group overflow-hidden rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] text-left"
+            className="group overflow-hidden rounded border border-[rgb(var(--border))] bg-[rgb(var(--card))] text-left"
           >
             <div className="relative aspect-[4/3] w-full">
               <Image

@@ -13,12 +13,13 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.967.0",
-    "@aws-sdk/s3-request-presigner": "^3.967.0",
+    "@aws-sdk/client-s3": "^3.968.0",
+    "@aws-sdk/s3-request-presigner": "^3.968.0",
     "@next-auth/prisma-adapter": "^1.0.7",
     "@prisma/client": "^6.19.2",
     "@tailwindcss/typography": "^0.5.19",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.8.0",
     "next": "16.1.1",
     "next-auth": "^4.24.13",
     "react": "19.2.3",

@@ -12,39 +12,91 @@ export function ImageUploader({ onUploaded }: { onUploaded: (url: string) => voi
   const [url, setUrl] = useState("")
   const [altHint, setAltHint] = useState("")
 
+  // async function onPick(file: File | null) {
+  //   if (!file) return
+  //   setPickedName(file.name)
+  //   setBusy(true)
+  //   setError(null)
+
+  //   try {
+  //     const presign = await fetch("/api/admin/uploads/presign", {
+  //       method: "POST",
+  //       headers: { "content-type": "application/json" },
+  //       body: JSON.stringify({ filename: file.name, contentType: file.type || "application/octet-stream" }),
+  //     })
+  //     const p = await presign.json()
+  //     if (!presign.ok) throw new Error(p?.error || "Presign failed")
+
+  //     const put = await fetch(p.uploadUrl, {
+  //       method: "PUT",
+  //       headers: { "content-type": file.type || "application/octet-stream" },
+  //       body: file,
+  //     })
+  //     if (!put.ok) throw new Error("Upload failed")
+
+  //     onUploaded(p.publicUrl)
+
+  //     // reset input so re-selecting the same file triggers onChange
+  //     if (inputRef.current) inputRef.current.value = ""
+  //     setPickedName("")
+  //   } catch (e: any) {
+  //     setError(e?.message || "Upload failed")
+  //   } finally {
+  //     setBusy(false)
+  //   }
+  // }
   async function onPick(file: File | null) {
-    if (!file) return
-    setPickedName(file.name)
-    setBusy(true)
-    setError(null)
+  if (!file) return
+  setPickedName(file.name)
+  setBusy(true)
+  setError(null)
 
+  try {
+    const presign = await fetch("/api/admin/uploads/presign", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        filename: file.name,
+        contentType: file.type || "application/octet-stream",
+      }),
+    })
+
+    const p = await presign.json().catch(() => ({}))
+    if (!presign.ok) throw new Error(p?.error || `Presign failed (${presign.status})`)
+    if (!p?.uploadUrl) throw new Error("Presign missing uploadUrl")
+
+    let putRes: Response
     try {
-      const presign = await fetch("/api/admin/uploads/presign", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ filename: file.name, contentType: file.type || "application/octet-stream" }),
-      })
-      const p = await presign.json()
-      if (!presign.ok) throw new Error(p?.error || "Presign failed")
-
-      const put = await fetch(p.uploadUrl, {
+      putRes = await fetch(p.uploadUrl, {
         method: "PUT",
         headers: { "content-type": file.type || "application/octet-stream" },
         body: file,
       })
-      if (!put.ok) throw new Error("Upload failed")
-
-      onUploaded(p.publicUrl)
-
-      // reset input so re-selecting the same file triggers onChange
-      if (inputRef.current) inputRef.current.value = ""
-      setPickedName("")
-    } catch (e: any) {
-      setError(e?.message || "Upload failed")
-    } finally {
-      setBusy(false)
+    } catch (err: any) {
+      // Browser-level failure (very commonly CORS/preflight blocked)
+      throw new Error(
+        "Upload request was blocked by the browser (likely S3 CORS). " +
+          "Check bucket CORS AllowedOrigins includes this site."
+      )
     }
+
+    if (!putRes.ok) {
+      // If S3 returns a body and CORS allows it, show it.
+      const text = await putRes.text().catch(() => "")
+      throw new Error(`Upload failed (${putRes.status}). ${text ? `Details: ${text}` : ""}`.trim())
+    }
+
+    onUploaded(p.publicUrl)
+
+    if (inputRef.current) inputRef.current.value = ""
+    setPickedName("")
+  } catch (e: any) {
+    setError(e?.message || "Upload failed")
+  } finally {
+    setBusy(false)
   }
+}
+
 
   function addUrl() {
     const v = url.trim()
