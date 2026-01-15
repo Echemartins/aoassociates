@@ -16,7 +16,7 @@ export default async function AdminDashboard() {
   ])
 
   return (
-    <div className="rounded-2xl border border-[rgb(var(--border))] bg-white p-6">
+    <div className="border-x border-[rgb(var(--border))] bg-white p-6">
       <h1 className="text-xl font-semibold">Dashboard</h1>
       <p className="mt-1 text-sm text-[rgb(var(--muted))]">Overview of site content.</p>
 
@@ -32,7 +32,7 @@ export default async function AdminDashboard() {
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-5">
+    <div className="rounded-l border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-5">
       <div className="text-sm text-[rgb(var(--muted))]">{label}</div>
       <div className="mt-2 text-3xl font-semibold">{value}</div>
     </div>

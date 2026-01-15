@@ -124,7 +124,7 @@ export function ImageUploader({ onUploaded }: { onUploaded: (url: string) => voi
           type="button"
           disabled={busy}
           onClick={() => inputRef.current?.click()}
-          className="rounded-full border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-4 py-2 text-sm font-semibold text-[rgb(var(--accent))] transition-colors hover:bg-[rgb(var(--accent))] hover:text-white disabled:opacity-60"
+          className="rounded-xl border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-5 py-1 text-sm font-semibold text-green-800 transition-colors hover:bg-green-800 hover:text-white disabled:opacity-60"
         >
           {busy ? "Uploading…" : "Choose Image"}
         </button>
@@ -154,7 +154,7 @@ export function ImageUploader({ onUploaded }: { onUploaded: (url: string) => voi
       ) : null}
 
       {/* Manual URL entry (always visible) */}
-      <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-4">
+      {/* <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-4">
         <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">Paste Image URL</div>
         <div className="mt-2 grid gap-2">
           <input
@@ -182,11 +182,11 @@ export function ImageUploader({ onUploaded }: { onUploaded: (url: string) => voi
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
-      <div className="text-xs text-[rgb(var(--muted))]">
+      {/* <div className="text-xs text-[rgb(var(--muted))]">
         Tip: Keep filenames short and descriptive (e.g., <span className="font-mono">lobby-01.webp</span>).
-      </div>
+      </div> */}
     </div>
   )
 }
