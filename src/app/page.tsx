@@ -160,7 +160,7 @@ export default async function HomePage() {
 
           </div>
 
-          <div className="mt-3 max-w-4xl mx-auto overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-red-500 shadow-sm">
+          <div className="mt-3 max-w-4xl mx-auto overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-black shadow-sm">
             <video
               className="w-full max-h-110 object-cover"
               controls
