@@ -147,6 +147,7 @@ import { prisma } from "@/src/lib/prisma"
 import { Markdown } from "@/src/components/Markdown"
 import { toSlug } from "@/src/lib/slug"
 import { ProjectHeroGallery } from "@/src/components/ProjectHeroGallery"
+import BackPill from "@/src/components/BackPill"
 
 export default async function ProjectDetailPage({
   params,
@@ -183,8 +184,8 @@ export default async function ProjectDetailPage({
   }
 
   return (
-    <Container className="py-5">
-
+    <Container className="py-2 relative">
+        <BackPill />
 
       {/* HERO IMAGE + THUMBNAILS + DETAILS OVERLAY */}
       {project.images?.length ? <ProjectHeroGallery images={project.images as any} /> : null}

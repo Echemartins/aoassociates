@@ -77,7 +77,7 @@ export function ProjectCard({ project }: { project: any }) {
       </div>
 
       <div className="px-3 py-1">
-        <div className="text-3xl text-green-700 font-semibold">{project.title}</div>
+        <div className="text-3xl text-gray-700 font-semibold">{project.title}</div>
         <div className="mt-1 text-xl text-yellow-700 font-medium">
           {project.location || "—"} {project.year ? `• ${project.year}` : ""}
         </div>

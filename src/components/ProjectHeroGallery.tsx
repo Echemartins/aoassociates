@@ -105,7 +105,7 @@ export function ProjectHeroGallery({ images }: { images: Img[] }) {
   const modalCanNext = modalIndex < list.length - 1
 
   return (
-    <div className="mt-8">
+    <div className="mt-1">
       {/* HERO IMAGE (90vw) */}
       <div className="mx-auto w-full">
         <div className="relative overflow-hidden border border-[rgb(var(--border))] bg-[rgb(var(--card))]">
@@ -166,6 +166,9 @@ export function ProjectHeroGallery({ images }: { images: Img[] }) {
             </div>
           </div>
         </div>
+        <p className="mt-2 text-l text-[rgb(var(--muted))]">
+            Use the arrows on the main image to browse.
+        </p>
 
         {/* THUMBNAILS */}
         <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
@@ -196,108 +199,92 @@ export function ProjectHeroGallery({ images }: { images: Img[] }) {
           })}
         </div>
 
-        <p className="mt-2 text-xs text-[rgb(var(--muted))]">
-          Tip: Use the arrows on the main image to browse. Click any thumbnail to open details.
+        <p className="mt-2 text-l text-[rgb(var(--muted))]">
+          Click any Image to open details.
         </p>
       </div>
 
       {/* DETAILS OVERLAY (caption/credit/notes) */}
       {open ? (
-        <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
-          {/* Backdrop */}
-          <button
-            aria-label="Close"
-            onClick={closeModal}
-            className="absolute inset-0 bg-black/60"
-          />
+  <div className="fixed inset-0 z-50" role="dialog" aria-modal="true">
+    {/* Backdrop */}
+    <button
+      aria-label="Close"
+      onClick={closeModal}
+      className="absolute inset-0 bg-black/60"
+    />
 
-          {/* Modal */}
-          <div className="absolute inset-0 flex items-center justify-center p-4">
-            <div className="relative w-full max-w-5xl overflow-hidden rounded-[12px] border border-[rgb(var(--border))] bg-[rgb(var(--bg))] shadow-xl">
-              {/* Top bar */}
-              <div className="flex items-center justify-between border-b border-[rgb(var(--border))] px-4 py-3">
-                <div className="text-sm font-semibold text-[rgb(var(--fg))]">
-                  Image {modalIndex + 1} / {list.length}
-                </div>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  aria-label="Close"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] hover:bg-[rgb(var(--card))]"
-                >
-                  <FiX className="h-5 w-5" />
-                </button>
+    {/* Modal (full-bleed content, minimal chrome) */}
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="relative h-[92vh] w-[92vw] max-w-7xl overflow-hidden rounded-[12px] border border-[rgb(var(--border))] bg-[rgb(var(--bg))] shadow-xl">
+        {/* Absolute close */}
+        <button
+          type="button"
+          onClick={closeModal}
+          aria-label="Close"
+          className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur hover:opacity-95"
+        >
+          <FiX className="h-5 w-5 text-[rgb(var(--fg))]" />
+        </button>
+
+        {/* Absolute image counter */}
+        <div className="absolute left-3 top-3 z-20 rounded-full border border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] px-3 py-1 text-xs font-semibold text-[rgb(var(--fg))] backdrop-blur">
+          {modalIndex + 1} / {list.length}
+        </div>
+
+        {/* Full-bleed 3-column layout: Logo | Details | Image */}
+        <div className="grid h-full w-full md:grid-cols-12">
+          {/* Logo (left) */}
+          <div className="md:col-span-2 border-b border-[rgb(var(--border))] md:border-b-0 md:border-r bg-[rgb(var(--card))]">
+            <div className="h-full w-full flex pt-10 justify-center">
+              <div className="relative h-44 w-[95%]">
+                <Image
+                  src="/images/aoalogo.png" // <- change to your logo path
+                  alt="Company logo"
+                  fill
+                  sizes="(max-width: 768px) 30vw, 160px"
+                  className="object-contain"
+                  priority
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Details (middle) */}
+          <div className="md:col-span-3 border-b border-[rgb(var(--border))] md:border-b-0 md:border-r bg-[rgb(var(--card))] overflow-auto">
+            {/* No padding: use only minimal internal spacing via typography */}
+            <div className="h-full w-full  overflow-auto">
+              <div className="px-3 py-3">
+                {/* <div className="text-2xl font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                  Image details
+                </div> */}
               </div>
 
-              {/* Image area */}
-              <div className="relative bg-[rgb(var(--card))]">
-                <div className="relative h-[60vh] min-h-[320px] w-full">
-                  {/* “See all parts” centering */}
-                  <div className="absolute inset-0">
-                    <MediaFill
-                      src={modalImg.url}
-                      alt={modalImg.alt || "Project image"}
-                      className="object-contain"
-                    />
-                  </div>
-
-                  {/* Overlay arrows */}
-                  <button
-                    type="button"
-                    onClick={() => modalCanPrev && setModalIndex((x) => x - 1)}
-                    disabled={!modalCanPrev}
-                    aria-label="Previous"
-                    className={[
-                      "absolute left-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-full border",
-                      "border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur",
-                      !modalCanPrev ? "opacity-35 cursor-not-allowed" : "hover:opacity-95",
-                    ].join(" ")}
-                  >
-                    <FiChevronLeft className="h-5 w-5 text-[rgb(var(--fg))]" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => modalCanNext && setModalIndex((x) => x + 1)}
-                    disabled={!modalCanNext}
-                    aria-label="Next"
-                    className={[
-                      "absolute right-3 top-1/2 -translate-y-1/2 inline-flex h-10 w-10 items-center justify-center rounded-full border",
-                      "border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur",
-                      !modalCanNext ? "opacity-35 cursor-not-allowed" : "hover:opacity-95",
-                    ].join(" ")}
-                  >
-                    <FiChevronRight className="h-5 w-5 text-[rgb(var(--fg))]" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Details */}
-              <div className="grid gap-2 px-4 py-4 text-sm">
+              <div className="px-3 py-3 grid gap-3 text-sm">
                 {modalImg.caption ? (
                   <div>
-                    <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                    <div className="text-xl font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Caption
                     </div>
-                    <div className="mt-1 text-[rgb(var(--fg))]">{modalImg.caption}</div>
+                    <div className="mt-1 text-2xl text-[rgb(var(--fg))]">{modalImg.caption}</div>
                   </div>
                 ) : null}
 
                 {modalImg.credit ? (
                   <div>
-                    <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                    <div className="text-xl mt-5 font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Credit
                     </div>
-                    <div className="mt-1 text-[rgb(var(--fg))]">{modalImg.credit}</div>
+                    <div className="mt-1 text-2xl text-[rgb(var(--fg))]">{modalImg.credit}</div>
                   </div>
                 ) : null}
 
                 {modalImg.notes ? (
                   <div>
-                    <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                    <div className="text-xl mt-5 font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
                       Notes
                     </div>
-                    <div className="mt-1 text-[rgb(var(--fg))]">{modalImg.notes}</div>
+                    <div className="mt-1 text-2xl text-[rgb(var(--fg))]">{modalImg.notes}</div>
                   </div>
                 ) : null}
 
@@ -307,8 +294,56 @@ export function ProjectHeroGallery({ images }: { images: Img[] }) {
               </div>
             </div>
           </div>
+
+          {/* Image (right) */}
+          <div className="md:col-span-7 bg-[rgb(var(--card))]">
+            <div className="relative h-full w-full">
+              {/* Image fill */}
+              <div className="absolute inset-0">
+                <MediaFill
+                  src={modalImg.url}
+                  alt={modalImg.alt || "Project image"}
+                  className="object-cover"
+                />
+              </div>
+
+              {/* Overlay arrows */}
+              <button
+                type="button"
+                onClick={() => modalCanPrev && setModalIndex((x) => x - 1)}
+                disabled={!modalCanPrev}
+                aria-label="Previous"
+                className={[
+                  "absolute left-3 top-1/2 -translate-y-1/2 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border",
+                  "border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur",
+                  !modalCanPrev ? "opacity-35 cursor-not-allowed" : "hover:opacity-95",
+                ].join(" ")}
+              >
+                <FiChevronLeft className="h-5 w-5 text-[rgb(var(--fg))]" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => modalCanNext && setModalIndex((x) => x + 1)}
+                disabled={!modalCanNext}
+                aria-label="Next"
+                className={[
+                  "absolute right-3 top-1/2 -translate-y-1/2 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border",
+                  "border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur",
+                  !modalCanNext ? "opacity-35 cursor-not-allowed" : "hover:opacity-95",
+                ].join(" ")}
+              >
+                <FiChevronRight className="h-5 w-5 text-[rgb(var(--fg))]" />
+              </button>
+            </div>
+          </div>
         </div>
-      ) : null}
+      </div>
+    </div>
+  </div>
+) : null}
+
+
     </div>
   )
 }

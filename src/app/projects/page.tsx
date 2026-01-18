@@ -28,12 +28,12 @@ export default async function ProjectsPage({
       AND: [
         q
           ? {
-              OR: [
-                { title: { contains: q, mode: "insensitive" } },
-                { summary: { contains: q, mode: "insensitive" } },
-                { location: { contains: q, mode: "insensitive" } },
-              ],
-            }
+            OR: [
+              { title: { contains: q, mode: "insensitive" } },
+              { summary: { contains: q, mode: "insensitive" } },
+              { location: { contains: q, mode: "insensitive" } },
+            ],
+          }
           : {},
         tag ? { tags: { has: tag } } : {},
       ],
@@ -82,11 +82,10 @@ export default async function ProjectsPage({
           <div className="mt-6 flex flex-wrap gap-2">
             <Link
               href="/projects"
-              className={` px-3 py- text-2xl font-semibold ${
-                !tag
-                  ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
-                  : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:bg-[rgba(var(--accent),0.06)]"
-              }`}
+              className={` px-3 py- text-2xl font-semibold ${!tag
+                ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
+                : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:bg-[rgba(var(--accent),0.06)]"
+                }`}
             >
               All
             </Link>
@@ -95,11 +94,10 @@ export default async function ProjectsPage({
               <Link
                 key={t}
                 href={`/projects?tag=${encodeURIComponent(t)}`}
-                className={` px-3 py- text-2xl font-semibold transition-colors ${
-                  tag === t
-                    ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
-                    : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:border-[rgba(var(--accent),0.55)] hover:bg-[rgba(var(--accent),0.06)]"
-                }`}
+                className={` px-3 py- text-2xl font-semibold transition-colors ${tag === t
+                  ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
+                  : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:border-[rgba(var(--accent),0.55)] hover:bg-[rgba(var(--accent),0.06)]"
+                  }`}
               >
                 {t}
               </Link>
