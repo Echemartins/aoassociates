@@ -84,7 +84,7 @@ export default async function ProjectsPage({
               href="/projects"
               className={` px-3 py- text-2xl font-semibold ${
                 !tag
-                  ? "border-b border-b-[3px] border-[rgb(var(--fg))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
+                  ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
                   : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:bg-[rgba(var(--accent),0.06)]"
               }`}
             >
@@ -97,7 +97,7 @@ export default async function ProjectsPage({
                 href={`/projects?tag=${encodeURIComponent(t)}`}
                 className={` px-3 py- text-2xl font-semibold transition-colors ${
                   tag === t
-                    ? "border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
+                    ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
                     : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:border-[rgba(var(--accent),0.55)] hover:bg-[rgba(var(--accent),0.06)]"
                 }`}
               >
