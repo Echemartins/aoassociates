@@ -47,7 +47,7 @@ export function ProjectCard({ project }: { project: any }) {
   return (
     <Link
       href={`/projects/${project.slug}`}
-      className="group overflow-hidden rounded-[6px] bg-gray-100 hover:shadow-md hover:scale-[1.01] transition"
+      className="group overflow-hidden bg-gray-100/10 hover:shadow-md hover:scale-[1.01] transition"
     >
       <div className="relative aspect-[4/3] w-full bg-[rgb(var(--card))]">
         {cover ? (
@@ -70,19 +70,19 @@ export function ProjectCard({ project }: { project: any }) {
             />
           )
         ) : (
-          <div className="flex h-full items-center justify-center text-xs text-[rgb(var(--muted))]">
+          <div className="flex h-full items-center justify-center text-xl text-[rgb(var(--muted))]">
             No image
           </div>
         )}
       </div>
 
-      <div className="p-3">
-        <div className="text-md font-semibold">{project.title}</div>
-        <div className="mt-1 text-sm text-yellow-700 font-medium">
+      <div className="px-3 py-1">
+        <div className="text-3xl text-green-700 font-semibold">{project.title}</div>
+        <div className="mt-1 text-xl text-yellow-700 font-medium">
           {project.location || "—"} {project.year ? `• ${project.year}` : ""}
         </div>
         {project.summary ? (
-          <div className="mt-2 line-clamp-2 text-sm text-[rgb(var(--muted))]">
+          <div className="mt-2 line-clamp-2 text-xl text-gray-700">
             {project.summary}
           </div>
         ) : null}

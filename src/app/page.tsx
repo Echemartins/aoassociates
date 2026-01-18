@@ -6,22 +6,23 @@ import Image from "next/image"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
 import { ProjectCard } from "@/src/components/ProjectCard"
-import { PostCard } from "@/src/components/PostCard"
+import { ArchiveCard } from "@/src/components/ArchiveCard"
 
 export const revalidate = 60
 
 export default async function HomePage() {
-  const [projects, posts] = await Promise.all([
+  const [projects, archives] = await Promise.all([
     prisma.project.findMany({
       where: { status: "PUBLISHED" },
       orderBy: { year: "desc" },
       take: 6,
       include: { images: { orderBy: { order: "asc" }, take: 1 } },
     }),
-    prisma.post.findMany({
+    prisma.archiveProject.findMany({
       where: { status: "PUBLISHED" },
-      orderBy: { publishedAt: "desc" },
+      orderBy: [{ interventionYear: "desc" }, { updatedAt: "desc" }],
       take: 3,
+      include: { images: { orderBy: { order: "asc" }, take: 1 } },
     }),
   ])
 
@@ -30,7 +31,6 @@ export default async function HomePage() {
       {/* HERO */}
       <section className="border-b border-[rgb(var(--border))] bg-[rgb(var(--bg))]">
         <Container className="py-1 sm:py-3">
-          {/* Hero Image (with overlay content INSIDE) */}
           <div className="relative overflow-hidden rounded-sm border border-[rgb(var(--border))] bg-[rgb(var(--card))] shadow-sm">
             <div className="relative aspect-[12/10] w-full md:aspect-[28/10]">
               <Image
@@ -42,58 +42,49 @@ export default async function HomePage() {
                 className="object-cover"
               />
 
-              {/* NetZero logo (top-right inside hero) */}
+              {/* NetZero logo */}
               <div className="absolute right-3 top-3">
-                <div className="">
-                  <Image
-                    src="/images/netzero.png"
-                    alt="NetZero"
-                    width={92}
-                    height={92}
-                    className="h-12 w-12 object-contain sm:h-14 sm:w-14"
-                  />
-                </div>
+                <Image
+                  src="/images/netzero.png"
+                  alt="NetZero"
+                  width={92}
+                  height={92}
+                  className="h-12 w-12 object-contain sm:h-14 sm:w-14"
+                />
               </div>
 
-              {/* Readability gradient */}
               <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
 
-              {/* Centered overlay content (badges left/right of title) */}
-              <div className="absolute bottom-0 left-3 right-3 sm:bottom-0 sm:left-5 sm:right-5">
+              <div className="absolute bottom-0 left-3 right-3 sm:left-5 sm:right-5">
                 <div className="mx-auto max-w-4xl p-3 sm:p-4">
                   <div className="flex items-center justify-center gap-2 sm:gap-6">
-                    {/* Left badge */}
                     <HeroBadgeImg src="/images/badges/logo1.webp" alt="MWBE Certified" />
 
-                    {/* Center title + tagline */}
                     <div className="text-center">
-                      <div className="text-base font-semibold tracking-tight text-white/70 sm:text-2xl">
+                      <div className="text-base font-semibold tracking-tight text-white/80 sm:text-3xl">
                         AO + Associates Inc.
                       </div>
-                      <div className="mt-1 text-[11px] leading-snug text-white/50 sm:text-sm">
+                      <div className="mt-1 text-[11px] leading-snug text-white/80 sm:text-xl">
                         Environmentally responsible, resource-efficient, green &amp; net-zero architecture.
                       </div>
                     </div>
 
-                    {/* Right badge */}
-                    <HeroBadgeImg src="/images/badges/logo2.jpg" alt="DBE Certified" />
+                    <HeroBadgeImg src="/images/badges/logo2.png" alt="DBE Certified" />
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Content below hero image */}
+          {/* Content below hero */}
           <div className="grid gap-4">
-            <div className=" bg-[rgb(var(--bg))] p-6">
-
-              {/* Office + Sustainability */}
+            <div className="bg-[rgb(var(--bg))] p-6">
               <div className="grid gap-4 lg:grid-cols-2">
-                <div className="flex flex-col gap-4 rounded-xl bg-[rgb(var(--card))] p-4">
-                  <div className="text-xs font-bold uppercase tracking-wide text-gray-800">
+                <div className="flex md:text-right flex-col gap-4 rounded-xl bg-[rgb(var(--card))] p-4">
+                  <div className="text-3xl font-bold uppercase tracking-wide text-gray-800">
                     Office
                   </div>
-                  <div className="mt-2 text-sm font-medium text-[rgb(var(--muted))]">
+                  <div className="mt-2 text-2xl font-medium text-[rgb(var(--muted))]">
                     1270 Av. of The Americas
                     <br />
                     7th Floor, #1154
@@ -101,14 +92,16 @@ export default async function HomePage() {
                     New York, NY 10020
                   </div>
 
-                  <p className="text-gray-600 font-medium">Environmentally responsible, Resource Efficient, Green &amp; Net-Zero Architecture.</p>
+                  <p className="text-gray-600 text-2xl font-medium">
+                    Environmentally responsible, Resource Efficient, Green &amp; Net-Zero Architecture.
+                  </p>
                 </div>
 
                 <div className="rounded-xl bg-[rgb(var(--card))] p-4">
-                  <div className="text-xs font-bold uppercase tracking-wide text-gray-800">
+                  <div className="text-3xl font-bold uppercase tracking-wide text-gray-800">
                     Sustainability focus
                   </div>
-                  <ul className="mt-2 grid gap-2 text-sm font-medium text-[rgb(var(--muted))]">
+                  <ul className="mt-2 grid gap-2 text-2xl font-medium text-[rgb(var(--muted))]">
                     <li>• Renewable clean energy sources</li>
                     <li>• Energy efficiency</li>
                     <li>• Rainwater harvest, recycle &amp; reuse</li>
@@ -118,79 +111,60 @@ export default async function HomePage() {
                   </ul>
                 </div>
               </div>
-
-              {/* CTA */}
-              {/* <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href="/projects"
-                  className="rounded-full bg-[rgb(var(--fg))] px-5 py-2.5 text-sm font-medium text-white hover:opacity-90"
-                >
-                  View Projects
-                </Link>
-                <Link
-                  href="/archives"
-                  className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-5 py-2.5 text-sm font-medium hover:bg-[rgb(var(--card))]"
-                >
-                  Read Archives
-                </Link>
-                <Link
-                  href="/contact"
-                  className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-5 py-2.5 text-sm font-medium hover:bg-[rgb(var(--card))]"
-                >
-                  Contact
-                </Link>
-              </div> */}
             </div>
           </div>
         </Container>
       </section>
 
       {/* Walkthrough Video */}
-      <section className="border-b max-w-4xl mx-auto border-[rgb(var(--border))] bg-[rgb(var(--bg))]">
+      <section className="border-b border-[rgb(var(--border))] bg-[rgb(var(--bg))]">
         <Container className="py-10">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div className="max-w-2xl">
-              {/* Small label */}
-              
-
-              <p className="mt-1 text-sm font-medium text-[rgb(var(--muted))]">
-                A quick tour of our sustainability-first approach and recent work.
-              </p>
+          <div className="mx-auto max-w-4xl">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <span className="inline-flex items-center rounded bg-[rgb(var(--card))] px-3 py-1 text-sm font-semibold text-[rgb(var(--muted))]">
+                  1-minute walkthrough
+                </span>
+                <p className="mt-2 text-xl font-medium text-[rgb(var(--muted))]">
+                  A quick tour of our sustainability-first approach and recent work.
+                </p>
+              </div>
             </div>
 
+            <div className="mt-4 overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-black shadow-sm">
+              <video
+                className="w-full max-h-[520px] object-cover"
+                controls
+                playsInline
+                preload="metadata"
+                poster="/images/mirage/mirage2.jpg"
+              >
+                <source
+                  src="/videos/aoassociates-walkthrough-cinematic-60s-compressed-60s.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
-
-          <div className="mt-3 max-w-4xl mx-auto overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-black shadow-sm">
-            <video
-              className="w-full max-h-110 object-cover"
-              controls
-              playsInline
-              preload="metadata"
-              poster="/images/mirage/mirage2.jpg"
-            >
-              <source src="/videos/aoassociates-walkthrough-cinematic-60s-compressed-60s.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </div>
-
-          <span className="inline-flex items-center rounded bg-[rgb(var(--card))] px-3 py-1 text-xs font-semibold text-[rgb(var(--muted))]">
-                1-minute walkthrough
-              </span>
         </Container>
       </section>
-
 
       {/* Featured Projects */}
       <section className="bg-[rgb(var(--bg))]">
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-xl font-semibold">Featured Projects</h2>
-            <Link href="/projects" className="text-sm text-yellow-700 font-medium hover:text-[rgb(var(--fg))]">
+            <h2 className="text-3xl font-semibold">Featured Projects</h2>
+            <Link
+              href="/projects"
+              className="text-3xl text-yellow-700 font-medium hover:text-[rgb(var(--fg))]"
+            >
               View all →
             </Link>
           </div>
 
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {/* FIX: lg:grid-cols- was invalid */}
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p) => (
               <ProjectCard key={p.id} project={p as any} />
             ))}
@@ -198,19 +172,22 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* Latest Archives */}
+      {/* Latest Archives (Option B: ArchiveProject, not Post) */}
       <section className="border-t border-[rgb(var(--border))] bg-[rgb(var(--card))]">
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-xl font-semibold">Latest Archives</h2>
-            <Link href="/archives" className="text-md font-medium text-yellow-700 hover:text-[rgb(var(--fg))]">
+            <h2 className="text-3xl font-semibold">Latest Archives</h2>
+            <Link
+              href="/archives"
+              className="text-3xl font-medium text-yellow-700 hover:text-[rgb(var(--fg))]"
+            >
               View all →
             </Link>
           </div>
 
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post as any} />
+            {archives.map((a) => (
+              <ArchiveCard key={a.id} archive={a as any} />
             ))}
           </div>
         </Container>
@@ -227,7 +204,7 @@ function HeroBadgeImg({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         width={88}
         height={32}
-        className="h-6 w-auto object-contain sm:h-7"
+        className="h-12 w-auto object-contain sm:h-20"
       />
     </span>
   )

@@ -103,6 +103,60 @@ model ProjectImage {
   updatedAt DateTime @updatedAt
 }
 
+enum ArchiveStatus {
+  // Optional: keep it simple.
+  // If you prefer, remove this enum and just use PublishStatus.
+  // I’m keeping PublishStatus for consistency.
+  UNUSED
+}
+
+model ArchiveProject {
+  id               String        @id @default(auto()) @map("_id") @db.ObjectId
+  slug             String        @unique
+  title            String
+  summary          String?
+  location         String?
+
+  // Archive-specific fields (tailored experience)
+  originalYear     Int?          // e.g., when original building/project was done
+  interventionYear Int?          // e.g., year of renovation / reconstruction / upgrade
+  typology         String?       // can differ from active projects if needed
+  interventionType String?       // e.g., Renovation, Restoration, Adaptive Reuse, Expansion
+  scope            String?       // short description of work scope (one line)
+  existingCondition String?      // “before” state
+  constraints      String?       // archive-specific constraints
+  strategy         String?       // archive-specific strategy
+  outcome          String?       // archive-specific outcome
+
+  sustainability   String?
+  tags             String[]      @default([])
+  body             String?       // Markdown narrative
+  coverImageUrl    String?
+  status           PublishStatus @default(DRAFT)
+
+  images           ArchiveProjectImage[]
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ArchiveProjectImage {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  archiveProjectId String  @db.ObjectId
+  url             String
+  alt             String
+  caption         String?
+  credit          String?
+  notes           String?
+  order           Int      @default(0)
+
+  archiveProject  ArchiveProject @relation(fields: [archiveProjectId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+
 model Post {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   slug        String        @unique

@@ -50,7 +50,7 @@ export function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-[rgb(var(--border))] bg-[rgb(var(--bg))]/80 backdrop-blur">
-      <Container className="flex h-16 items-center justify-between gap-4">
+      <Container className="flex h-32 items-center justify-between gap-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -59,9 +59,9 @@ export function SiteHeader() {
             width={140}
             height={40}
             priority
-            className="h-14 w-auto object-contain"
+            className="h-32 w-auto object-contain"
           />
-          <span className="hidden text-xs font-medium text-[rgb(var(--muted))] sm:inline">
+          <span className="hidden text-2xl font-medium text-green-800 sm:inline">
             Green Architecture &amp; Planning
           </span>
         </Link>
@@ -74,7 +74,7 @@ export function SiteHeader() {
               href={item.href}
               aria-current={item.active ? "page" : undefined}
               className={[
-                "rounded-full border px-4 py-0.5 text-sm font-medium transition-colors",
+                "rounded-full border px-6 py-0.5 text-xl font-medium transition-colors",
                 item.active
                   ? "bg-yellow-700/90 text-white hover:bg-yellow-700"
                   : "border-[rgb(var(--border))] bg-[rgb(36,107,12)] text-white hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--bg))] hover:text-[rgb(var(--accent))]",

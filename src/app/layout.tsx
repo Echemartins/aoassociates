@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="min-h-dvh bg-[rgb(var(--bg))] text-[rgb(var(--fg))] antialiased">
         <SiteHeader />
-        <main className="pt-16">{children}</main>
+        <main className="pt-32 text-xl">{children}</main>
         <SiteFooter />
       </body>
     </html>

@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
 import { ProjectCard } from "@/src/components/ProjectCard"
+import BackPill from "@/src/components/BackPill"
 
 type SP = Record<string, string | string[] | undefined>
 
@@ -41,7 +42,6 @@ export default async function ProjectsPage({
     include: { images: { orderBy: { order: "asc" }, take: 1 } },
   })
 
-  // Gather tags for filter UI
   const all = await prisma.project.findMany({
     where: { status: "PUBLISHED" },
     select: { tags: true },
@@ -49,10 +49,19 @@ export default async function ProjectsPage({
   const tags = Array.from(new Set(all.flatMap((p) => p.tags))).sort()
 
   return (
-    <Container className="py-10">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Projects</h1>
+    <Container className="py-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-3">
+          <BackPill />
+
+          <div>
+            <h1 className="text-4xl font-medium tracking-tight text-gray-800 sm:text-6xl">
+              Projects
+            </h1>
+            {/* <p className="mt-1 text-base font-semibold text-[rgba(var(--fg),0.72)]">
+              Browse completed work. Filter by category or search by keyword.
+            </p> */}
+          </div>
         </div>
 
         <form className="flex w-full gap-2 sm:w-auto" action="/projects" method="get">
@@ -60,9 +69,9 @@ export default async function ProjectsPage({
             name="q"
             defaultValue={q}
             placeholder="Search projects…"
-            className="w-full rounded-full border border-[rgb(var(--border))] bg-white px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-72"
+            className="w-full rounded-full border border-[rgb(var(--border))] bg-white px-5 py-2.5 text-base font-medium text-[rgb(var(--fg))] outline-none placeholder:text-[rgba(var(--fg),0.45)] focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-80"
           />
-          <button className="rounded-full bg-[rgb(var(--fg))] px-4 py-2 text-sm font-medium text-white hover:opacity-90">
+          <button className="rounded-full bg-[rgb(var(--fg))] px-5 py-2.5 text-base font-semibold text-white hover:opacity-90">
             Search
           </button>
         </form>
@@ -73,10 +82,10 @@ export default async function ProjectsPage({
           <div className="mt-6 flex flex-wrap gap-2">
             <Link
               href="/projects"
-              className={`rounded-full border px-4 py-1 text-xs ${
+              className={` px-3 py- text-2xl font-semibold ${
                 !tag
-                  ? "border-[rgb(var(--fg))] text-[rgb(var(--fg))]"
-                  : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
+                  ? "border-b border-b-[3px] border-[rgb(var(--fg))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
+                  : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:bg-[rgba(var(--accent),0.06)]"
               }`}
             >
               All
@@ -86,10 +95,10 @@ export default async function ProjectsPage({
               <Link
                 key={t}
                 href={`/projects?tag=${encodeURIComponent(t)}`}
-                className={`rounded-full border px-3 py-1 text-xs ${
+                className={` px-3 py- text-2xl font-semibold transition-colors ${
                   tag === t
-                    ? "border-[rgb(var(--fg))] text-[rgb(var(--fg))]"
-                    : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
+                    ? "border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
+                    : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:border-[rgba(var(--accent),0.55)] hover:bg-[rgba(var(--accent),0.06)]"
                 }`}
               >
                 {t}
@@ -97,11 +106,31 @@ export default async function ProjectsPage({
             ))}
           </div>
 
-          <p className="mt-2 text-xs font-medium text-[rgb(var(--muted))]">select a category.</p>
+          {/* <p className="mt-3 text-sm font-semibold text-[rgba(var(--fg),0.70)]">
+            Tip: Select a category to refine the list.
+          </p> */}
         </>
       ) : null}
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {/* <div className="mt-6 text-sm font-semibold text-[rgba(var(--fg),0.70)]">
+        Showing <span className="text-[rgb(var(--fg))]">{projects.length}</span> project
+        {projects.length === 1 ? "" : "s"}
+        {tag ? (
+          <>
+            {" "}
+            in <span className="text-[rgb(var(--fg))]">{tag}</span>
+          </>
+        ) : null}
+        {q ? (
+          <>
+            {" "}
+            for <span className="text-[rgb(var(--fg))]">“{q}”</span>
+          </>
+        ) : null}
+        .
+      </div> */}
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((p) => (
           <ProjectCard key={p.id} project={p as any} />
         ))}

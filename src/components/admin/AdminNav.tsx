@@ -4,15 +4,16 @@ import { SignOutButton } from "@/src/components/admin/SignOutButton"
 const items = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/projects", label: "Projects" },
-  { href: "/admin/posts", label: "Archives" },
+  { href: "/admin/archives", label: "Archives" }, // Option B
   { href: "/admin/inquiries", label: "Inquiries" },
   { href: "/admin/feedback", label: "Feedback" },
 ]
 
 export function AdminNav() {
   return (
-    <nav className=" border-x border-x-[rgb(var(--border))] bg-white p-4">
+    <nav className="border-x border-x-[rgb(var(--border))] bg-white p-4">
       <div className="text-sm font-semibold">Admin</div>
+
       <div className="mt-3 grid gap-1">
         {items.map((i) => (
           <Link
@@ -24,6 +25,7 @@ export function AdminNav() {
           </Link>
         ))}
       </div>
+
       <div className="mt-3">
         <SignOutButton />
       </div>
