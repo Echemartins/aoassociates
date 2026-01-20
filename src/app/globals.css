@@ -22,12 +22,14 @@
   --border: 220 236 228;   /* soft mint-gray border */
 
   /* Brand accents */
-  --accent: 34 197 94;     /* brand green (emerald) */
-  --accent-2: 16 185 129;  /* secondary (teal-emerald) */
-  --accent-soft: 209 250 229; /* light mint highlight */
+  --accent: 34 197 94;         /* emerald */
+  --accent-2: 16 185 129;      /* teal-emerald */
+  --accent-soft: 209 250 229;  /* light mint highlight */
 
-  /* UI */
+  /* UI helpers */
   --ring: 34 197 94;
+
+  /* Some components referenced this earlier in your codebase */
   --shadow: 0 0 0;
 }
 
@@ -42,7 +44,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Optional: subtle brand wash so the site feels “AO” without being loud */
+/* Subtle brand wash (safe: never captures pointer events, always behind) */
 body::before {
   content: "";
   position: fixed;
@@ -59,22 +61,33 @@ body::before {
   background: rgba(34, 197, 94, 0.20);
 }
 
-/* Consistent focus ring (accessible + brand-aligned) */
+/* Brand-aligned focus ring (works with keyboard navigation) */
 :focus-visible {
   outline: 2px solid rgba(34, 197, 94, 0.55);
   outline-offset: 2px;
 }
 
-/* Links (subtle by default, brand on hover) */
+/* ---------------------------------------------------------
+   Link styling
+   IMPORTANT:
+   - Do NOT globally recolor all <a> on hover; it can break
+     pill buttons and nav styles that rely on Tailwind classes.
+   - Instead, apply link styling mainly to prose content.
+   --------------------------------------------------------- */
+
 a {
   text-underline-offset: 3px;
 }
 
-a:hover {
+/* Only “article-style” content gets brand link treatment */
+.prose a:hover {
   color: rgb(var(--accent));
 }
 
-/* Typography plugin tuning (so prose looks architectural + clean) */
+/* ---------------------------------------------------------
+   Typography plugin tuning (clean, architectural)
+   --------------------------------------------------------- */
+
 .prose {
   --tw-prose-body: rgb(var(--fg));
   --tw-prose-headings: rgb(var(--fg));
@@ -82,19 +95,31 @@ a:hover {
   --tw-prose-links: rgb(var(--accent));
   --tw-prose-bold: rgb(var(--fg));
   --tw-prose-counters: rgb(var(--muted));
-  --tw-prose-bullets: rgb(var(--border));
+  --tw-prose-bullets: rgb(var(--muted));
   --tw-prose-hr: rgb(var(--border));
   --tw-prose-quotes: rgb(var(--fg));
   --tw-prose-quote-borders: rgb(var(--border));
   --tw-prose-captions: rgb(var(--muted));
   --tw-prose-code: rgb(var(--fg));
+
+  /* Fix: this must be a color value, not an RGB triple */
   --tw-prose-pre-code: rgb(243 244 246);
-  --tw-prose-pre-bg: rgb(15 23 42); /* slate-900 style */
+
+  /* Dark pre background */
+  --tw-prose-pre-bg: rgb(15 23 42);
+
   --tw-prose-th-borders: rgb(var(--border));
   --tw-prose-td-borders: rgb(var(--border));
 }
 
-/* Optional utility classes (handy for consistent brand usage) */
+/* Optional: slightly softer prose spacing if you want a tighter “portfolio” feel */
+.prose :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  line-height: 1.7;
+}
+
+/* ---------------------------------------------------------
+   Optional utility classes (safe to keep)
+   --------------------------------------------------------- */
 .brand-text {
   color: rgb(var(--accent));
 }

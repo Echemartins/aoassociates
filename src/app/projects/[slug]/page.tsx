@@ -226,28 +226,28 @@ export default async function ProjectDetailPage({
 
         <div className="lg:col-span-4">
           <div className="border-l-0 border-t border-[rgb(var(--border))] pt-6 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0">
-            <div className="text-sm font-semibold">Project Info</div>
+            <div className="text-2xl font-semibold">Project Info</div>
 
-            <dl className="mt-4 grid gap-4 text-sm">
+            <dl className="mt-4 grid gap-4 text-lg">
               <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                <dt className="text-xl font-semibold uppercase tracking-wide text-[rgb(var(--fg))]">
                   Services
                 </dt>
-                <dd className="mt-1 text-[rgb(var(--fg))]">{project.services || "—"}</dd>
+                <dd className="mt-1 text-gray-700">{project.services || "—"}</dd>
               </div>
 
               <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                <dt className="text-xl font-semibold uppercase tracking-wide text-[rgb(var(--fg))]">
                   Sustainability
                 </dt>
-                <dd className="mt-1 text-[rgb(var(--fg))]">{project.sustainability || "—"}</dd>
+                <dd className="mt-1 text-gray-700">{project.sustainability || "—"}</dd>
               </div>
 
               <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
+                <dt className="text-xl font-semibold uppercase tracking-wide text-[rgb(var(--fg))]">
                   Client
                 </dt>
-                <dd className="mt-1 text-[rgb(var(--fg))]">{project.client || "—"}</dd>
+                <dd className="mt-1 text-gray-700">{project.client || "—"}</dd>
               </div>
             </dl>
           </div>

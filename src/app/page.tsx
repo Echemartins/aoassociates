@@ -53,19 +53,26 @@ export default async function HomePage() {
                 />
               </div>
 
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+              {/* Readability gradient */}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" />
 
+              {/* Centered overlay content */}
               <div className="absolute bottom-0 left-3 right-3 sm:left-5 sm:right-5">
                 <div className="mx-auto max-w-4xl p-3 sm:p-4">
                   <div className="flex items-center justify-center gap-2 sm:gap-6">
                     <HeroBadgeImg src="/images/badges/logo1.webp" alt="MWBE Certified" />
 
                     <div className="text-center">
-                      <div className="text-base font-semibold tracking-tight text-white/80 sm:text-3xl">
+                      <div className="text-base font-semibold tracking-tight text-white sm:text-3xl">
                         AO + Associates Inc.
                       </div>
-                      <div className="mt-1 text-[11px] leading-snug text-white/80 sm:text-xl">
+                      <div className="mt-1 text-[11px] leading-snug text-white/90 sm:text-xl">
                         Environmentally responsible, resource-efficient, green &amp; net-zero architecture.
+                      </div>
+
+                      {/* green cue under title */}
+                      <div className="mt-2 flex justify-center">
+                        <span className="h-[3px] w-24 rounded-full bg-[rgb(var(--accent))]" />
                       </div>
                     </div>
 
@@ -80,11 +87,16 @@ export default async function HomePage() {
           <div className="grid gap-4">
             <div className="bg-[rgb(var(--bg))] p-6">
               <div className="grid gap-4 lg:grid-cols-2">
-                <div className="flex md:text-right flex-col gap-4 rounded-xl bg-[rgb(var(--card))] p-4">
-                  <div className="text-3xl font-bold uppercase tracking-wide text-gray-800">
-                    Office
+                {/* Office */}
+                <div className="flex md:text-right flex-col gap-4 rounded-xl bg-[rgb(var(--card))] p-5">
+                  <div className="flex items-center gap-3 md:justify-end">
+                    {/* <span className="h-8 w-1.5 rounded-full bg-[rgb(var(--accent))]" /> */}
+                    <div className="text-3xl font-extrabold uppercase tracking-wide text-[rgb(var(--accent))]">
+                      Office
+                    </div>
                   </div>
-                  <div className="mt-2 text-2xl font-medium text-[rgb(var(--muted))]">
+
+                  <div className="text-2xl lg:text-3xl font-semibold text-[rgb(var(--muted))]">
                     1270 Av. of The Americas
                     <br />
                     7th Floor, #1154
@@ -92,22 +104,34 @@ export default async function HomePage() {
                     New York, NY 10020
                   </div>
 
-                  <p className="text-gray-600 text-2xl font-medium">
-                    Environmentally responsible, Resource Efficient, Green &amp; Net-Zero Architecture.
+                  <p className="text-xl mt-6 font-medium text-[rgb(var(--accent))]">
+                    Environmentally responsible, resource efficient, green &amp; net-zero architecture.
                   </p>
                 </div>
 
-                <div className="rounded-xl bg-[rgb(var(--card))] p-4">
-                  <div className="text-3xl font-bold uppercase tracking-wide text-gray-800">
+                {/* Sustainability */}
+                <div className="rounded-xl bg-[rgb(var(--card))] p-5">
+                  <div className="flex items-center gap-3">
+                    {/* <span className="h-8 w-1.5 rounded-full bg-[rgb(var(--accent))]" /> */}
+                    <div className="text-3xl font-extrabold uppercase tracking-wide text-[rgb(var(--accent))]">
                     Sustainability focus
+                    </div>
                   </div>
-                  <ul className="mt-2 grid gap-2 text-2xl font-medium text-[rgb(var(--muted))]">
-                    <li>• Renewable clean energy sources</li>
-                    <li>• Energy efficiency</li>
-                    <li>• Rainwater harvest, recycle &amp; reuse</li>
-                    <li>• Site sensitivity &amp; adaptation</li>
-                    <li>• Indoor environmental quality</li>
-                    <li>• Waste reduction &amp; recycling</li>
+
+                  <ul className="mt-4 grid gap-3 text-2xl font-medium text-[rgb(var(--fg))]">
+                    {[
+                      "Renewable clean energy sources",
+                      "Energy efficiency",
+                      "Rainwater harvest, recycle & reuse",
+                      "Site sensitivity & adaptation",
+                      "Indoor environmental quality",
+                      "Waste reduction & recycling",
+                    ].map((item) => (
+                      <li key={item} className="flex items-start gap-3">
+                        <span className="mt-1 text-[rgb(var(--accent))]">•</span>
+                        <span className="text-[rgb(var(--muted))]">{item}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -122,16 +146,16 @@ export default async function HomePage() {
           <div className="mx-auto max-w-4xl">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div className="max-w-2xl">
-                <span className="inline-flex items-center rounded bg-[rgb(var(--card))] px-3 py-1 text-sm font-semibold text-[rgb(var(--muted))]">
-                  1-minute walkthrough
-                </span>
-                <p className="mt-2 text-xl font-medium text-[rgb(var(--muted))]">
+                
+                <p className="text-xl font-semibold text-[rgb(var(--fg))]">
                   A quick tour of our sustainability-first approach and recent work.
                 </p>
               </div>
             </div>
-
-            <div className="mt-4 overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-black shadow-sm">
+            <span className="inline-flex items-center py-1 text-xl font-semibold text-[rgb(var(--accent))]">
+                  1-minute walkthrough
+                </span>
+            <div className="mt-1 overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-black shadow-sm">
               <video
                 className="w-full max-h-[520px] object-cover"
                 controls
@@ -146,6 +170,7 @@ export default async function HomePage() {
                 Your browser does not support the video tag.
               </video>
             </div>
+            
           </div>
         </Container>
       </section>
@@ -154,16 +179,18 @@ export default async function HomePage() {
       <section className="bg-[rgb(var(--bg))]">
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-3xl font-semibold">Featured Projects</h2>
+            <h2 className="text-3xl lg:text-5xl font-medium text-[rgb(var(--accent))]">
+              Featured Projects
+            </h2>
+
             <Link
               href="/projects"
-              className="text-3xl text-yellow-700 font-medium hover:text-[rgb(var(--fg))]"
+              className="text-2xl border border-[rgb(var(--accent))] px-4 rounded-full font-semibold text-[rgb(var(--accent))] hover:opacity-80"
             >
               View all →
             </Link>
           </div>
 
-          {/* FIX: lg:grid-cols- was invalid */}
           <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((p) => (
               <ProjectCard key={p.id} project={p as any} />
@@ -172,14 +199,17 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* Latest Archives (Option B: ArchiveProject, not Post) */}
+      {/* Latest Archives */}
       <section className="border-t border-[rgb(var(--border))] bg-[rgb(var(--card))]">
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
-            <h2 className="text-3xl font-semibold">Latest Archives</h2>
+            <h2 className="text-3xl lg:text-5xl font-medium text-[rgb(var(--accent))]">
+              Latest Archives
+            </h2>
+
             <Link
               href="/archives"
-              className="text-3xl font-medium text-yellow-700 hover:text-[rgb(var(--fg))]"
+              className="text-2xl border border-[rgb(var(--accent))] px-4 rounded-full font-semibold text-[rgb(var(--accent))] hover:opacity-80"
             >
               View all →
             </Link>

@@ -7,7 +7,7 @@ function unwrapCdnUrl(url: string) {
   try {
     const u = new URL(url)
     if (u.pathname.startsWith("/x/cdn/")) {
-      const candidate = u.searchParams.toString() // sometimes it's stored as raw query without key
+      const candidate = u.searchParams.toString()
       // handle both:
       // 1) /x/cdn/?https://....
       // 2) /x/cdn/?url=https://....
@@ -20,8 +20,6 @@ function unwrapCdnUrl(url: string) {
 }
 
 function isLikelyAllowedForNextImage(src: string) {
-  // This is just a safety check. Next/image enforces config anyway.
-  // We use it to decide whether to render <Image> or <img>.
   try {
     const h = new URL(src).hostname
     const allowed = new Set([
@@ -35,7 +33,6 @@ function isLikelyAllowedForNextImage(src: string) {
     if (h.includes(".s3.") && h.endsWith(".amazonaws.com")) return true
     return false
   } catch {
-    // relative paths like /images/...
     return src.startsWith("/")
   }
 }
@@ -46,43 +43,61 @@ export function ProjectCard({ project }: { project: any }) {
 
   return (
     <Link
-      href={`/projects/${project.slug}`}
-      className="group overflow-hidden bg-gray-100/10 hover:shadow-md hover:scale-[1.01] transition"
+      href={`/projects/${encodeURIComponent(project.slug)}`}
+      className={[
+        "group block overflow-hidden rounded border border-[rgb(var(--border))]",
+        "bg-[rgb(var(--card))] shadow-[0_0_0_0_rgba(0,0,0,0)]",
+        "transition hover:-translate-y-[2px] hover:shadow-md",
+      ].join(" ")}
     >
-      <div className="relative aspect-[4/3] w-full bg-[rgb(var(--card))]">
+      {/* Media */}
+      <div className="relative aspect-[4/3] w-full bg-[rgb(var(--card-2))]">
         {cover ? (
           isLikelyAllowedForNextImage(cover) ? (
             <Image
               src={cover}
               alt={project.title || "Project image"}
               fill
-              className="object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+              className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               sizes="(max-width: 1024px) 100vw, 33vw"
             />
           ) : (
-            // Fallback that will NOT crash, even for unknown hostnames
             <img
               src={cover}
               alt={project.title || "Project image"}
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               loading="lazy"
               referrerPolicy="no-referrer"
             />
           )
         ) : (
-          <div className="flex h-full items-center justify-center text-xl text-[rgb(var(--muted))]">
+          <div className="flex h-full items-center justify-center text-sm font-medium text-[rgb(var(--muted))]">
             No image
           </div>
         )}
+
+        {/* Subtle top gradient for legibility */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/25 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+
+        {/* Status/Tag pill (optional) */}
+        {project.year ? (
+          <div className="absolute left-3 top-3 inline-flex items-center rounded-full px-3 text-lg font-semibold bg-black/5 text-green-600">
+          {project.location ? <span>{project.location}   </span> : <span>—</span>}{"  "}
+          {project.year ? <span className="text-[rgb(var(--border))] mr-2">{""}</span> : null}
+          {project.year ? <span>{project.year}</span> : null}
+          </div>
+        ) : null}
+        <span></span>
       </div>
 
-      <div className="px-3 py-1">
-        <div className="text-3xl text-gray-700 font-semibold">{project.title}</div>
-        <div className="mt-1 text-xl text-yellow-700 font-medium">
-          {project.location || "—"} {project.year ? `• ${project.year}` : ""}
+      {/* Copy */}
+      <div className="p-4">
+        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-[rgb(var(--accent))]">
+          {project.title}
         </div>
+
         {project.summary ? (
-          <div className="mt-2 line-clamp-2 text-xl text-gray-700">
+          <div className="mt-2 line-clamp-2 text-xl leading-relaxed font-medium text-gray-700">
             {project.summary}
           </div>
         ) : null}
