@@ -8,7 +8,7 @@ export function ArchiveCard({ archive }: { archive: any }) {
     <Link
       href={`/archives/${encodeURIComponent(archive.slug)}`}
       className={[
-        "group block overflow-hidden rounded-[10px] border border-[rgb(var(--border))]",
+        "group block overflow-hidden rounded border border-[rgb(var(--border))]",
         "bg-[rgb(var(--card))] transition hover:-translate-y-[2px] hover:shadow-md",
       ].join(" ")}
     >
@@ -28,21 +28,21 @@ export function ArchiveCard({ archive }: { archive: any }) {
         )}
 
         {/* Archive pill */}
-        <div className="absolute left-3 top-3 inline-flex items-center rounded-full border border-white/20 bg-black/35 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
+        {/* <div className="absolute left-3 top-3 inline-flex items-center rounded-full border border-white/20 bg-black/35 px-3 py-1 text-xs font-semibold text-white backdrop-blur">
           Archive
-        </div>
+        </div> */}
       </div>
 
       <div className="p-4">
-        <div className="text-lg font-semibold tracking-tight text-[rgb(var(--fg))]">
+        <div className="text-3xl font-semibold tracking-tight text-green-800">
           {archive.title}
         </div>
 
-        <div className="mt-1 text-sm font-medium text-[rgb(var(--muted))]">
+        {/* <div className="mt-1 text-sm font-medium text-[rgb(var(--muted))]">
           {archive.location || "—"}
-        </div>
+        </div> */}
 
-        {(archive.interventionType || archive.interventionYear) ? (
+        {/* {(archive.interventionType || archive.interventionYear) ? (
           <div className="mt-2 flex flex-wrap items-center gap-2 text-xs font-semibold text-[rgb(var(--fg))]">
             {archive.interventionType ? (
               <span className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--accent-soft))] px-3 py-1 text-[rgb(var(--fg))]">
@@ -56,17 +56,17 @@ export function ArchiveCard({ archive }: { archive: any }) {
               </span>
             ) : null}
           </div>
-        ) : null}
+        ) : null} */}
 
         {archive.summary ? (
-          <div className="mt-2 line-clamp-2 text-sm leading-relaxed text-[rgb(var(--muted))]">
+          <div className="mt-2 line-clamp-2 text-xl font-medium leading-relaxed text-gray-700">
             {archive.summary}
           </div>
         ) : null}
 
-        <div className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[rgb(var(--accent))]">
+        {/* <div className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[rgb(var(--accent))]">
           View archive <span className="transition-transform duration-200 group-hover:translate-x-0.5">→</span>
-        </div>
+        </div> */}
       </div>
     </Link>
   )

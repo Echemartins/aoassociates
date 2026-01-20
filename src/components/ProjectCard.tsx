@@ -80,19 +80,19 @@ export function ProjectCard({ project }: { project: any }) {
         <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-black/25 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
 
         {/* Status/Tag pill (optional) */}
-        {project.year ? (
+        {/* {project.year ? (
           <div className="absolute left-3 top-3 inline-flex items-center rounded-full px-3 text-lg font-semibold bg-black/5 text-green-600">
           {project.location ? <span>{project.location}   </span> : <span>—</span>}{"  "}
           {project.year ? <span className="text-[rgb(var(--border))] mr-2">{""}</span> : null}
           {project.year ? <span>{project.year}</span> : null}
           </div>
         ) : null}
-        <span></span>
+        <span></span> */}
       </div>
 
       {/* Copy */}
       <div className="p-4">
-        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-[rgb(var(--accent))]">
+        <div className="text-2xl md:text-3xl font-semibold tracking-tight text-green-800">
           {project.title}
         </div>
 

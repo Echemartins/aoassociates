@@ -67,17 +67,17 @@ export function SiteHeader() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-3 sm:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-3 md:flex" aria-label="Primary navigation">
           {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={item.active ? "page" : undefined}
               className={[
-                "rounded-full border px-6 py-0.5 text-xl font-medium transition-colors",
+                "rounded-full border px-6 py-0.5 text-center w-30 text-xl font-medium transition-colors",
                 item.active
                   ? "bg-yellow-700/90 text-white hover:bg-yellow-700"
-                  : "border-[rgb(var(--border))] bg-[rgb(36,107,12)] text-white hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--bg))] hover:text-[rgb(var(--accent))]",
+                  : "border-[rgb(var(--border))] bg-green-800 text-white hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--bg))] hover:text-[rgb(var(--accent))]",
               ].join(" ")}
             >
               {item.label}
