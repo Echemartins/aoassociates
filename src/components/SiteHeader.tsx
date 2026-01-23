@@ -61,23 +61,23 @@ export function SiteHeader() {
             priority
             className="h-32 w-auto object-contain"
           />
-          <span className="hidden text-2xl font-medium text-green-800 sm:inline">
+          <span className="hidden text-2xl pb-7 font-medium text-green-800 sm:inline">
             Green Architecture &amp; Planning
           </span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-3 md:flex" aria-label="Primary navigation">
+        <nav className="hidden items-center gap-3 pb-7 md:flex" aria-label="Primary navigation">
           {items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               aria-current={item.active ? "page" : undefined}
               className={[
-                "rounded-full border px-6 py-0.5 text-center w-30 text-xl font-medium transition-colors",
+                "rounded-full border-[1.5px] px-6 py-0.5 text-center w-30 text-xl font-xs transition-colors",
                 item.active
-                  ? "bg-yellow-700/90 text-white hover:bg-yellow-700"
-                  : "border-[rgb(var(--border))] bg-green-800 text-white hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--bg))] hover:text-[rgb(var(--accent))]",
+                  ? "bg-white text-green-800 hover:bg-green-800 hover:text-white"
+                  : "border-[rgb(var(--border))] bg-green-800 text-white hover:border-green-800 hover:bg-[rgb(var(--bg))] hover:text-green-800",
               ].join(" ")}
             >
               {item.label}
@@ -152,14 +152,14 @@ export function SiteHeader() {
               ))}
             </div>
 
-            <div className="mt-3">
+            {/* <div className="mt-3">
               <Link
                 href="/contact"
                 className="block border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-4 py-3 text-center text-sm font-semibold text-[rgb(var(--accent))] transition-colors hover:bg-[rgb(var(--accent))] hover:text-white"
               >
                 Start a Project
               </Link>
-            </div>
+            </div> */}
 
             <div className="mt-3 flex justify-center">
               <button

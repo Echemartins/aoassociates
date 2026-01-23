@@ -60,37 +60,37 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
 
   useEffect(() => {
     if (mode !== "edit" || !id) return
-    ;(async () => {
-      setLoading(true)
-      const res = await fetch(`/api/admin/projects/${id}`)
-      const json = await res.json()
-      if (json.project) {
-        setData({
-          title: json.project.title ?? "",
-          slug: json.project.slug ?? "",
-          summary: json.project.summary ?? "",
-          location: json.project.location ?? "",
-          year: json.project.year ?? null,
-          typology: json.project.typology ?? "",
-          client: json.project.client ?? "",
-          services: json.project.services ?? "",
-          sustainability: json.project.sustainability ?? "",
-          tags: json.project.tags ?? [],
-          body: json.project.body ?? "",
-          status: json.project.status ?? "DRAFT",
-          images: (json.project.images ?? []).map((i: any) => ({
-            id: i.id,
-            url: i.url,
-            alt: i.alt,
-            caption: i.caption,
-            credit: i.credit,
-            notes: i.notes,
-            order: i.order ?? 0,
-          })),
-        })
-      }
-      setLoading(false)
-    })()
+      ; (async () => {
+        setLoading(true)
+        const res = await fetch(`/api/admin/projects/${id}`)
+        const json = await res.json()
+        if (json.project) {
+          setData({
+            title: json.project.title ?? "",
+            slug: json.project.slug ?? "",
+            summary: json.project.summary ?? "",
+            location: json.project.location ?? "",
+            year: json.project.year ?? null,
+            typology: json.project.typology ?? "",
+            client: json.project.client ?? "",
+            services: json.project.services ?? "",
+            sustainability: json.project.sustainability ?? "",
+            tags: json.project.tags ?? [],
+            body: json.project.body ?? "",
+            status: json.project.status ?? "DRAFT",
+            images: (json.project.images ?? []).map((i: any) => ({
+              id: i.id,
+              url: i.url,
+              alt: i.alt,
+              caption: i.caption,
+              credit: i.credit,
+              notes: i.notes,
+              order: i.order ?? 0,
+            })),
+          })
+        }
+        setLoading(false)
+      })()
   }, [mode, id])
 
   async function save() {
@@ -110,15 +110,15 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
     const res =
       mode === "create"
         ? await fetch("/api/admin/projects", {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(payload),
-          })
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        })
         : await fetch(`/api/admin/projects/${id}`, {
-            method: "PATCH",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(payload),
-          })
+          method: "PATCH",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify(payload),
+        })
 
     const json = await res.json()
     if (!res.ok) {
@@ -177,9 +177,9 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-xl font-semibold">{mode === "create" ? "New Project" : "Edit Project"}</h1>
-          <p className="mt-1 text-sm text-[rgb(var(--muted))]">
+          {/* <p className="mt-1 text-sm text-[rgb(var(--muted))]">
             This powers both the Projects gallery and the full case study page.
-          </p>
+          </p> */}
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -240,7 +240,7 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             />
           </Field>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          {/* <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Location">
               <input
                 value={data.location || ""}
@@ -289,9 +289,9 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
               onChange={(e) => setData((d) => ({ ...d, sustainability: e.target.value }))}
               className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm"
             />
-          </Field>
+          </Field> */}
 
-          <Field label="Tags (comma separated)">
+          <Field label="Tag">
             <input
               value={tagText}
               onChange={(e) =>
@@ -304,13 +304,13 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
             />
           </Field>
 
-          <Field label="Story (Markdown)">
+          {/* <Field label="Story (Markdown)">
             <textarea
               value={data.body || ""}
               onChange={(e) => setData((d) => ({ ...d, body: e.target.value }))}
               className="min-h-64 w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 font-mono text-xs"
             />
-          </Field>
+          </Field> */}
         </div>
 
         {/* Right: publishing + images */}
@@ -358,148 +358,118 @@ export function ProjectForm({ mode, id }: { mode: "create" | "edit"; id?: string
               </p> */}
             </div>
 
-            {/* Manual URL input (you requested) */}
-            {/* <div className="mt-4 rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--card))] p-4">
-              <div className="text-xs font-semibold uppercase tracking-wide text-[rgb(var(--muted))]">
-                Add by URL
-              </div>
-
-              <div className="mt-2 grid gap-2">
-                <input
-                  value={manualUrl}
-                  onChange={(e) => setManualUrl(e.target.value)}
-                  placeholder="https://… or /uploads/…"
-                  className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
-                />
-                <input
-                  value={manualAlt}
-                  onChange={(e) => setManualAlt(e.target.value)}
-                  placeholder="Alt text (recommended)"
-                  className="w-full rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
-                />
-
-                <button
-                  type="button"
-                  onClick={addManualImage}
-                  className="rounded-full border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-4 py-2 text-sm font-semibold text-[rgb(var(--accent))] transition-colors hover:bg-[rgb(var(--accent))] hover:text-white"
-                >
-                  Add Image
-                </button>
-              </div>
-            </div> */}
-
             {/* Image list */}
-            <div className="mt-4 grid gap-4">
-              {data.images.map((img, idx) => (
-                <div key={idx} className="rounded-l border border-green-500 bg-[rgb(var(--bg))] p-4">
-                  <div className="text-xs text-[rgb(var(--muted))] break-all">{img.url}</div>
-
-                  <div className="mt-3 grid gap-2">
-                    <input
-                      value={img.alt}
-                      onChange={(e) => {
-                        const alt = e.target.value
-                        setData((d) => {
-                          const next = d.images.slice()
-                          next[idx] = { ...next[idx], alt }
-                          return { ...d, images: next }
-                        })
-                      }}
-                      placeholder="Alt text"
-                      className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
-                    />
-
-                    <input
-                      value={img.caption || ""}
-                      onChange={(e) => {
-                        const caption = e.target.value
-                        setData((d) => {
-                          const next = d.images.slice()
-                          next[idx] = { ...next[idx], caption }
-                          return { ...d, images: next }
-                        })
-                      }}
-                      placeholder="Caption"
-                      className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
-                    />
-
-                    <input
-                      value={img.credit || ""}
-                      onChange={(e) => {
-                        const credit = e.target.value
-                        setData((d) => {
-                          const next = d.images.slice()
-                          next[idx] = { ...next[idx], credit }
-                          return { ...d, images: next }
-                        })
-                      }}
-                      placeholder="Credit (optional)"
-                      className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
-                    />
-
-                    <textarea
-                      value={img.notes || ""}
-                      onChange={(e) => {
-                        const notes = e.target.value
-                        setData((d) => {
-                          const next = d.images.slice()
-                          next[idx] = { ...next[idx], notes }
-                          return { ...d, images: next }
-                        })
-                      }}
-                      placeholder="Notes (optional)"
-                      className="min-h-20 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
-                    />
-
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        onClick={() => {
-                          setData((d) => {
-                            const next = d.images.slice()
-                            if (idx > 0) [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]]
-                            return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
-                          })
-                        }}
-                        className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
-                      >
-                        Up
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setData((d) => {
-                            const next = d.images.slice()
-                            if (idx < next.length - 1) [next[idx + 1], next[idx]] = [next[idx], next[idx + 1]]
-                            return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
-                          })
-                        }}
-                        className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
-                      >
-                        Down
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setData((d) => {
-                            const next = d.images.slice()
-                            next.splice(idx, 1)
-                            return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
-                          })
-                        }}
-                        className="ml-auto rounded-full border border-red-200 bg-[rgb(var(--bg))] px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-
-              {!data.images.length ? <div className="text-sm text-[rgb(var(--muted))]">No images yet.</div> : null}
-            </div>
           </div>
         </div>
       </div>
+        <div className="mt-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+          {data.images.map((img, idx) => (
+            <div key={idx} className="rounded-l border border-green-500 bg-[rgb(var(--bg))] p-4">
+              <div className="text-xs text-[rgb(var(--muted))] break-all">{img.url}</div>
+
+              <div className="mt-3 grid gap-2">
+                <input
+                  value={img.alt}
+                  onChange={(e) => {
+                    const alt = e.target.value
+                    setData((d) => {
+                      const next = d.images.slice()
+                      next[idx] = { ...next[idx], alt }
+                      return { ...d, images: next }
+                    })
+                  }}
+                  placeholder="Alt text"
+                  className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
+                />
+
+                <input
+                  value={img.caption || ""}
+                  onChange={(e) => {
+                    const caption = e.target.value
+                    setData((d) => {
+                      const next = d.images.slice()
+                      next[idx] = { ...next[idx], caption }
+                      return { ...d, images: next }
+                    })
+                  }}
+                  placeholder="Caption"
+                  className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
+                />
+
+                <input
+                  value={img.credit || ""}
+                  onChange={(e) => {
+                    const credit = e.target.value
+                    setData((d) => {
+                      const next = d.images.slice()
+                      next[idx] = { ...next[idx], credit }
+                      return { ...d, images: next }
+                    })
+                  }}
+                  placeholder="Credit (optional)"
+                  className="rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
+                />
+
+                <textarea
+                  value={img.notes || ""}
+                  onChange={(e) => {
+                    const notes = e.target.value
+                    setData((d) => {
+                      const next = d.images.slice()
+                      next[idx] = { ...next[idx], notes }
+                      return { ...d, images: next }
+                    })
+                  }}
+                  placeholder="Notes (optional)"
+                  className="min-h-20 rounded-xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-2 text-sm"
+                />
+
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => {
+                      setData((d) => {
+                        const next = d.images.slice()
+                        if (idx > 0) [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]]
+                        return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
+                      })
+                    }}
+                    className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
+                  >
+                    Up
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setData((d) => {
+                        const next = d.images.slice()
+                        if (idx < next.length - 1) [next[idx + 1], next[idx]] = [next[idx], next[idx + 1]]
+                        return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
+                      })
+                    }}
+                    className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
+                  >
+                    Down
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setData((d) => {
+                        const next = d.images.slice()
+                        next.splice(idx, 1)
+                        return { ...d, images: next.map((x, i) => ({ ...x, order: i })) }
+                      })
+                    }}
+                    className="ml-auto rounded-full border border-red-200 bg-[rgb(var(--bg))] px-3 py-1 text-sm font-medium text-red-700 hover:bg-red-50"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {!data.images.length ? <div className="text-sm text-[rgb(var(--muted))]">No images yet.</div> : null}
+        </div>
     </div>
   )
 }

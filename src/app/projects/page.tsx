@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
 import { ProjectCard } from "@/src/components/ProjectCard"
+import { ProjectsGridWithOverlay } from "@/src/components/projects/ProjectsGridWithOverlay"
+
 import BackPill from "@/src/components/BackPill"
 
 type SP = Record<string, string | string[] | undefined>
@@ -51,11 +53,11 @@ export default async function ProjectsPage({
   return (
     <Container className="py-3">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1">
           <BackPill />
 
           <div>
-            <h1 className="text-4xl font-medium tracking-tight text-gray-800 sm:text-6xl">
+            <h1 className="text-4xl font-medium tracking-tight text-green-800 sm:text-6xl">
               Projects
             </h1>
             {/* <p className="mt-1 text-base font-semibold text-[rgba(var(--fg),0.72)]">
@@ -69,9 +71,9 @@ export default async function ProjectsPage({
             name="q"
             defaultValue={q}
             placeholder="Search projects…"
-            className="w-full rounded-full border border-[rgb(var(--border))] bg-white px-5 py-2.5 text-base font-medium text-[rgb(var(--fg))] outline-none placeholder:text-[rgba(var(--fg),0.45)] focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-80"
+            className="w-full rounded-full border border-green-800 bg-white px-5 py-1.5 text-base font-medium text-[rgb(var(--fg))] outline-none placeholder:text-[rgba(var(--fg),0.45)] focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-80"
           />
-          <button className="rounded-full bg-[rgb(var(--fg))] px-5 py-2.5 text-base font-semibold text-white hover:opacity-90">
+          <button className="rounded-full bg-green-800 px-5 py-1.5 text-base font-semibold text-white hover:opacity-90">
             Search
           </button>
         </form>
@@ -83,7 +85,7 @@ export default async function ProjectsPage({
             <Link
               href="/projects"
               className={` px-3 py- text-2xl font-semibold ${!tag
-                ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
+                ? "border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
                 : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:bg-[rgba(var(--accent),0.06)]"
                 }`}
             >
@@ -95,7 +97,7 @@ export default async function ProjectsPage({
                 key={t}
                 href={`/projects?tag=${encodeURIComponent(t)}`}
                 className={` px-3 py- text-2xl font-semibold transition-colors ${tag === t
-                  ? "border-b border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
+                  ? "border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
                   : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:border-[rgba(var(--accent),0.55)] hover:bg-[rgba(var(--accent),0.06)]"
                   }`}
               >
@@ -128,11 +130,13 @@ export default async function ProjectsPage({
         .
       </div> */}
 
-      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {/* <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {projects.map((p) => (
           <ProjectCard key={p.id} project={p as any} />
         ))}
-      </div>
+      </div> */}
+      <ProjectsGridWithOverlay projects={projects as any} />
+
     </Container>
   )
 }

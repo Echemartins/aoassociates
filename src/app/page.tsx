@@ -6,6 +6,7 @@ import Image from "next/image"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
 import { ProjectCard } from "@/src/components/ProjectCard"
+
 import { ArchiveCard } from "@/src/components/ArchiveCard"
 
 export const revalidate = 60
@@ -76,7 +77,7 @@ export default async function HomePage() {
                       </div> */}
                     </div>
 
-                    <HeroBadgeImg src="/images/badges/logo2.png" alt="DBE Certified" />
+                    <HeroBadgeImg src="/images/badges/logo3.png" alt="DBE Certified" />
                   </div>
                 </div>
               </div>
@@ -91,22 +92,16 @@ export default async function HomePage() {
                 <div className="flex md:text-right flex-col gap-4 rounded-xl bg-[rgb(var(--card))] p-5">
                   <div className="flex items-center gap-3 md:justify-end">
                     {/* <span className="h-8 w-1.5 rounded-full bg-green-800" /> */}
-                    <div className="text-4xl font-bold uppercase tracking-wide text-green-800">
+                    <div className="text-4xl font-bold uppercase text-green-800">
                       Office
                     </div>
                   </div>
 
-                  <div className="text-2xl lg:text-3xl font-semibold text-gray-800">
-                    1270 Av. of The Americas
-                    <br />
-                    7th Floor, #1154
-                    <br />
-                    New York, NY 10020
+                  <div className="text-2xl lg:text-3xl flex flex-col gap-7 font-semibold text-gray-800">
+                    <p>1270 Av. of The Americas</p>
+                    <p>7th Floor, #1154</p>
+                    <p>New York, NY 10020</p>
                   </div>
-
-                  <p className="text-xl mt-6 font-medium text-green-800">
-                    Environmentally responsible, resource efficient, green &amp; net-zero architecture.
-                  </p>
                 </div>
 
                 {/* Sustainability */}
@@ -114,7 +109,7 @@ export default async function HomePage() {
                   <div className="flex items-center gap-3">
                     {/* <span className="h-8 w-1.5 rounded-full bg-green-800" /> */}
                     <div className="text-4xl font-bold uppercase tracking-wide text-green-800">
-                    Sustainability focus
+                      Sustainability focus
                     </div>
                   </div>
 
@@ -145,38 +140,38 @@ export default async function HomePage() {
         <Container className="py-10">
           <div className="mx-auto max-w-4xl">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div className="max-w-2xl">
-                
+              <div className="">
+
                 <p className="text-2xl font-semibold text-[rgb(var(--fg))]">
                   A quick tour of our sustainability-first approach and recent work.
                 </p>
               </div>
             </div>
-            <span className="inline-flex items-center py-1 text-xl font-semibold text-green-800">
-                  1-minute walkthrough
-                </span>
+            {/* <span className="inline-flex items-center py-1 text-xl font-semibold text-green-800">
+              1-minute walkthrough
+            </span> */}
             <div className="mt-1 overflow-hidden rounded-[7px] border border-[rgb(var(--border))] bg-black shadow-sm">
               <video
-                className="w-full max-h-[520px] object-cover"
+                className="w-full max-h-130 object-cover"
                 controls
                 playsInline
                 preload="metadata"
                 poster="/images/mirage/mirage2.jpg"
               >
                 <source
-                  src="/videos/aoassociates-walkthrough-cinematic-60s-compressed-60s.mp4"
+                  src="/videos/mirage_full_optionB_hq.mp4"
                   type="video/mp4"
                 />
                 Your browser does not support the video tag.
               </video>
             </div>
-            
+
           </div>
         </Container>
       </section>
 
       {/* Featured Projects */}
-      <section className="bg-[rgb(var(--bg))]">
+      {/* <section className="bg-[rgb(var(--bg))]">
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
             <h2 className="text-3xl lg:text-5xl font-medium text-green-800">
@@ -197,10 +192,10 @@ export default async function HomePage() {
             ))}
           </div>
         </Container>
-      </section>
+      </section> */}
 
       {/* Latest Archives */}
-      <section className="border-t border-[rgb(var(--border))] bg-[rgb(var(--card))]">
+      {/* <section className="border-t border-[rgb(var(--border))] bg-[rgb(var(--card))]">
         <Container className="py-10">
           <div className="flex items-end justify-between gap-4">
             <h2 className="text-3xl lg:text-5xl font-medium text-green-800">
@@ -221,7 +216,7 @@ export default async function HomePage() {
             ))}
           </div>
         </Container>
-      </section>
+      </section> */}
     </div>
   )
 }
