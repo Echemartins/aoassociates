@@ -74,7 +74,7 @@ export function SiteHeader() {
               href={item.href}
               aria-current={item.active ? "page" : undefined}
               className={[
-                "rounded-full border-[1.5px] px-6 py-0.5 text-center w-30 text-xl font-xs transition-colors",
+                "rounded-full border px-6 py-0.5 text-center w-30 text-xl font-xs transition-colors",
                 item.active
                   ? "bg-white text-green-800 hover:bg-green-800 hover:text-white"
                   : "border-[rgb(var(--border))] bg-green-800 text-white hover:border-green-800 hover:bg-[rgb(var(--bg))] hover:text-green-800",
