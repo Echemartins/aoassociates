@@ -63,7 +63,7 @@ export default function AboutPage() {
           {/* Single image (only one image on the page) */}
           <div className="lg:col-span-6 lg:mt-3">
             <div className="relative overflow-hidden">
-              <div className="relative bg-amber-900 h-46 lg:h-76">
+              <div className="relative h-46 lg:h-76">
                 <iframe
                   title="AO + Associates walkthrough video"
                   src="https://player.vimeo.com/video/1149345792?h=6723e7e5ca&autoplay=1&loop=1&muted=1&background=1"

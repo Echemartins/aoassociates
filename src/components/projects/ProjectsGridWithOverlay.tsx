@@ -225,7 +225,7 @@ function MediaContainWithBackdropOne({
                     aria-hidden="true"
                     fill
                     sizes="100vw"
-                    className="object-cover scale-110 blur-xl opacity-25"
+                    className="object-cover scale-90 opacity-90"
                     priority={false}
                     unoptimized={bypass}
                 /> */}
@@ -372,7 +372,7 @@ function ProjectOverlay({
                             {/* Image */}
                             <div className="md:col-span-7 bg-[rgb(var(--card))]">
                                 {/* On mobile we give the image its own height so it shows after details */}
-                                <div className="relative h-[44vh] min-h-70 bg-green-400 md:h-full w-full">
+                                <div className="relative h-[44vh] min-h-70 md:h-full w-full">
                                     {img?.url ? (
                                         <div className="absolute h-full bg-white/80 w-full inset-0">
                                             {/* KEY FIX: no cropping */}

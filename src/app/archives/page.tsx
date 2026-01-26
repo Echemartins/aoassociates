@@ -1,50 +1,26 @@
-// export const dynamic = "force-dynamic"
-
-
-// import { Container } from "@/src/components/Container"
-// import { prisma } from "@/src/lib/prisma"
-// import { PostCard } from "@/src/components/PostCard"
-
-// export const revalidate = 60
-
-// export default async function ArchivesPage() {
-//   const posts = await prisma.post.findMany({
-//     where: { status: "PUBLISHED" },
-//     orderBy: { publishedAt: "desc" },
-//   })
-
-//   return (
-//     <Container className="py-10">
-//       <h1 className="text-2xl font-semibold">Archives</h1>
-//       <p className="mt-1 text-sm text-[rgb(var(--muted))]">
-//         Notes, research, net-zero strategy, and behind-the-scenes decisions.
-//       </p>
-
-//       <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-//         {posts.map((p) => (
-//           <PostCard key={p.id} post={p as any} />
-//         ))}
-//       </div>
-//     </Container>
-//   )
-// }
-
-export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
+export const revalidate = 0
+export const runtime = "nodejs"
 
 import Link from "next/link"
 import { Container } from "@/src/components/Container"
 import { prisma } from "@/src/lib/prisma"
-import { ArchiveCard } from "@/src/components/ArchiveCard"
+import BackPill from "@/src/components/BackPill"
+import { ArchivesGridWithOverlay } from "@/src/components/archives/ArchivesGridWithOverlay"
+
+type SP = Record<string, string | string[] | undefined>
+function first(v: string | string[] | undefined) {
+  return Array.isArray(v) ? v[0] ?? "" : v ?? ""
+}
 
 export default async function ArchivesPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ q?: string; tag?: string }>
+  searchParams?: Promise<SP>
 }) {
-  const sp = (await searchParams) || {}
-  const q = (sp.q || "").trim()
-  const tag = (sp.tag || "").trim()
+  const sp = searchParams ? await searchParams : {}
+  const q = first(sp.q).trim()
+  const tag = first(sp.tag).trim()
 
   const archives = await prisma.archiveProject.findMany({
     where: {
@@ -67,6 +43,7 @@ export default async function ArchivesPage({
     include: { images: { orderBy: { order: "asc" }, take: 1 } },
   })
 
+  // tags
   const all = await prisma.archiveProject.findMany({
     where: { status: "PUBLISHED" },
     select: { tags: true },
@@ -74,13 +51,20 @@ export default async function ArchivesPage({
   const tags = Array.from(new Set(all.flatMap((p) => p.tags))).sort()
 
   return (
-    <Container className="py-10">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Archives</h1>
-          <p className="mt-1 text-sm text-[rgb(var(--muted))]">
-            Legacy work: renovations, reconstructions, adaptive reuse, and historical projects.
-          </p>
+    <Container className="py-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="flex flex-col gap-1">
+          <BackPill />
+
+          <div>
+            <h1 className="text-4xl font-medium tracking-tight text-green-800 sm:text-6xl">
+              Archives
+            </h1>
+            {/* Optional subtitle like Projects (kept commented in your Projects page) */}
+            {/* <p className="mt-1 text-base font-semibold text-[rgba(var(--fg),0.72)]">
+              Legacy work: renovations, adaptive reuse, and historical projects.
+            </p> */}
+          </div>
         </div>
 
         <form className="flex w-full gap-2 sm:w-auto" action="/archives" method="get">
@@ -88,48 +72,47 @@ export default async function ArchivesPage({
             name="q"
             defaultValue={q}
             placeholder="Search archives…"
-            className="w-full rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-72"
+            className="w-full rounded-full border border-green-800 bg-white px-5 py-1.5 text-base font-medium text-[rgb(var(--fg))] outline-none placeholder:text-green-800 focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-80"
           />
-          <button className="rounded-full border border-[rgb(var(--accent))] bg-[rgb(var(--bg))] px-4 py-2 text-sm font-semibold text-[rgb(var(--accent))] hover:bg-[rgb(var(--accent))] hover:text-white transition-colors">
+          <button className="rounded-full bg-green-800 px-5 py-1.5 text-base font-semibold text-white hover:opacity-90">
             Search
           </button>
         </form>
       </div>
 
-      {tags.length ? (
-        <div className="mt-6 flex flex-wrap gap-2">
+      {/* Tag pills (kept, but styled to match the Projects vibe) */}
+      {/* {tags.length ? (
+        <div className="mt-4 flex flex-wrap gap-2">
           <Link
             href="/archives"
-            className={`rounded-full border px-4 py-1 text-xs ${
+            className={[
+              "rounded-full border px-4 py-1 text-xs font-semibold",
               !tag
-                ? "border-[rgb(var(--accent))] text-[rgb(var(--accent))] bg-[rgb(var(--accent-soft))]"
-                : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
-            }`}
+                ? "border-green-800 text-green-800 bg-white"
+                : "border-[rgb(var(--border))] text-[rgb(var(--muted))] bg-[rgb(var(--bg))]",
+            ].join(" ")}
           >
             All
           </Link>
+
           {tags.map((t) => (
             <Link
               key={t}
               href={`/archives?tag=${encodeURIComponent(t)}`}
-              className={`rounded-full border px-3 py-1 text-xs ${
+              className={[
+                "rounded-full border px-3 py-1 text-xs font-semibold",
                 tag === t
-                  ? "border-[rgb(var(--accent))] text-[rgb(var(--accent))] bg-[rgb(var(--accent-soft))]"
-                  : "border-[rgb(var(--border))] text-[rgb(var(--muted))]"
-              }`}
+                  ? "border-green-800 text-green-800 bg-white"
+                  : "border-[rgb(var(--border))] text-[rgb(var(--muted))] bg-[rgb(var(--bg))]",
+              ].join(" ")}
             >
               {t}
             </Link>
           ))}
         </div>
-      ) : null}
+      ) : null} */}
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {archives.map((a) => (
-          <ArchiveCard key={a.id} archive={a as any} />
-        ))}
-      </div>
+      <ArchivesGridWithOverlay archives={archives as any} />
     </Container>
   )
 }
-
