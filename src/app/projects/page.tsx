@@ -40,7 +40,7 @@ export default async function ProjectsPage({
         tag ? { tags: { has: tag } } : {},
       ],
     },
-    orderBy: [{ year: "desc" }, { title: "asc" }],
+    orderBy: [{ sortOrder: "asc" }, { year: "desc" }, { title: "asc" }],
     include: { images: { orderBy: { order: "asc" }, take: 1 } },
   })
 
@@ -71,7 +71,7 @@ export default async function ProjectsPage({
             name="q"
             defaultValue={q}
             placeholder="Search projects…"
-            className="w-full rounded-full border border-green-800 bg-white px-5 py-1.5 text-base font-medium text-[rgb(var(--fg))] outline-none placeholder:text-[rgba(var(--fg),0.45)] focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-80"
+            className="w-full rounded-full border border-green-800 bg-white px-5 py-1.5 text-base font-medium text-[rgb(var(--fg))] outline-none placeholder:text-green-800 focus:ring-2 focus:ring-[rgba(var(--accent),0.35)] sm:w-80"
           />
           <button className="rounded-full bg-green-800 px-5 py-1.5 text-base font-semibold text-white hover:opacity-90">
             Search
@@ -79,62 +79,6 @@ export default async function ProjectsPage({
         </form>
       </div>
 
-      {tags.length ? (
-        <>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link
-              href="/projects"
-              className={` px-3 py- text-2xl font-semibold ${!tag
-                ? "border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--fg),0.04)] text-[rgb(var(--fg))]"
-                : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:bg-[rgba(var(--accent),0.06)]"
-                }`}
-            >
-              All
-            </Link>
-
-            {tags.map((t) => (
-              <Link
-                key={t}
-                href={`/projects?tag=${encodeURIComponent(t)}`}
-                className={` px-3 py- text-2xl font-semibold transition-colors ${tag === t
-                  ? "border-b-[3px] border-[rgb(var(--accent))] bg-[rgba(var(--accent),0.10)] text-[rgb(var(--fg))]"
-                  : "border-[rgb(var(--border))] bg-white text-[rgba(var(--fg),0.72)] hover:border-[rgba(var(--accent),0.55)] hover:bg-[rgba(var(--accent),0.06)]"
-                  }`}
-              >
-                {t}
-              </Link>
-            ))}
-          </div>
-
-          {/* <p className="mt-3 text-sm font-semibold text-[rgba(var(--fg),0.70)]">
-            Tip: Select a category to refine the list.
-          </p> */}
-        </>
-      ) : null}
-
-      {/* <div className="mt-6 text-sm font-semibold text-[rgba(var(--fg),0.70)]">
-        Showing <span className="text-[rgb(var(--fg))]">{projects.length}</span> project
-        {projects.length === 1 ? "" : "s"}
-        {tag ? (
-          <>
-            {" "}
-            in <span className="text-[rgb(var(--fg))]">{tag}</span>
-          </>
-        ) : null}
-        {q ? (
-          <>
-            {" "}
-            for <span className="text-[rgb(var(--fg))]">“{q}”</span>
-          </>
-        ) : null}
-        .
-      </div> */}
-
-      {/* <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((p) => (
-          <ProjectCard key={p.id} project={p as any} />
-        ))}
-      </div> */}
       <ProjectsGridWithOverlay projects={projects as any} />
 
     </Container>

@@ -32,7 +32,7 @@ export function SiteFooter() {
             <p className="mt-1 text-[16px] leading-6 text-white">
               Architecture • Planning • Sustainable Design  <br />Net-Zero Consulting
             </p>
-            <div className=" flex items-center gap-5 justify-center mt-1">
+            <div className=" grid grid-cols-3 mt-1 items-center gap-2 w-2/3 mx-auto place-items-center">
                 <BadgeImg square src="/images/netzero.png" alt="Net Zero Focus" />
                 <BadgeImg src="/images/badges/logo1.webp" alt="MWBE Certified" />
                 <BadgeImg src="/images/badges/logo3.png" alt="DBE Certified" />
@@ -83,7 +83,7 @@ function BadgeImg({
   square?: boolean
 }) {
   return (
-    <span className={`inline-flex ${square ? "items-center justify-center h-9 w-9 sm:h-14 sm:w-25" : "items-center justify-center h-9 w-9 sm:h-12 sm:w-12"}`}>
+    <span className={`inline-flex ${square ? "items-center justify-center h-9 w-9 sm:h-14 sm:w-22 mr-6"  : "items-center justify-center h-9 w-9 sm:h-12 sm:w-12"}`}>
       <Image
         src={src}
         alt={alt}

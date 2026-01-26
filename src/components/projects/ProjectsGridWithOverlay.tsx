@@ -64,55 +64,208 @@ function isLikelyAllowedForNextImage(src: string) {
  * To still "fill" the container visually, we layer a blurred object-cover behind it.
  */
 function MediaNoCropFill({
-  src,
-  alt,
-  containClass = "object-contain",
+    src,
+    alt,
+    containClass = "object-contain",
 }: {
-  src: string
-  alt: string
-  containClass?: string
+    src: string
+    alt: string
+    containClass?: string
 }) {
-  if (!src) return null
+    if (!src) return null
 
-  // Local: safe with next/image
-  if (isLocal(src)) {
+    // Local: safe with next/image
+    if (isLocal(src)) {
+        return (
+            <Image
+                src={src}
+                alt={alt || "Image"}
+                fill
+                sizes="100vw"
+                className={containClass} // keep object-contain to avoid cropping
+                priority={false}
+            />
+        )
+    }
+
+    // Remote: use next/image only if host allowed; else fallback to <img>
+    if (isLikelyAllowedForNextImage(src)) {
+        return (
+            <Image
+                src={src}
+                alt={alt || "Image"}
+                fill
+                sizes="100vw"
+                className={containClass} // keep object-contain to avoid cropping
+                priority={false}
+            />
+        )
+    }
+
+    // Fallback for unknown hosts
     return (
-      <Image
-        src={src}
-        alt={alt || "Image"}
-        fill
-        sizes="100vw"
-        className={containClass} // keep object-contain to avoid cropping
-        priority={false}
-      />
+        <img
+            src={src}
+            alt={alt || "Image"}
+            className={`absolute inset-0 h-full w-full ${containClass}`} // object-contain
+            loading="eager"
+            referrerPolicy="no-referrer"
+        />
     )
-  }
-
-  // Remote: use next/image only if host allowed; else fallback to <img>
-  if (isLikelyAllowedForNextImage(src)) {
-    return (
-      <Image
-        src={src}
-        alt={alt || "Image"}
-        fill
-        sizes="100vw"
-        className={containClass} // keep object-contain to avoid cropping
-        priority={false}
-      />
-    )
-  }
-
-  // Fallback for unknown hosts
-  return (
-    <img
-      src={src}
-      alt={alt || "Image"}
-      className={`absolute inset-0 h-full w-full ${containClass}`} // object-contain
-      loading="lazy"
-      referrerPolicy="no-referrer"
-    />
-  )
 }
+
+function shouldBypassNextImageOptimization(src: string) {
+    try {
+        const h = new URL(src).hostname
+        // avoid Next optimizer hitting S3 and timing out
+        return h.includes("amazonaws.com") || h.includes("s3.")
+    } catch {
+        return false
+    }
+}
+
+// function MediaFillOne({
+//   src,
+//   alt,
+//   className,
+// }: {
+//   src: string
+//   alt: string
+//   className: string
+// }) {
+//   if (!src) return null
+
+//   // Local always ok
+//   if (isLocal(src)) {
+//     return (
+//       <Image
+//         src={src}
+//         alt={alt || "Image"}
+//         fill
+//         sizes="100vw"
+//         className={className}
+//         priority={false}
+//       />
+//     )
+//   }
+
+//   // Remote: use next/image only if allowed; bypass optimizer for S3 to prevent 500/timeouts
+//   if (isLikelyAllowedForNextImage(src)) {
+//     return (
+//       <Image
+//         src={src}
+//         alt={alt || "Image"}
+//         fill
+//         sizes="100vw"
+//         className={className}
+//         priority={false}
+//         unoptimized={shouldBypassNextImageOptimization(src)}
+//       />
+//     )
+//   }
+
+//   // Unknown host fallback
+//   return (
+//     <img
+//       src={src}
+//       alt={alt || "Image"}
+//       className={`absolute inset-0 h-full w-full ${className}`}
+//       loading="lazy"
+//       referrerPolicy="no-referrer"
+//     />
+//   )
+// }
+
+function MediaContainWithBackdropOne({
+    src,
+    alt,
+    containClass = "object-contain",
+}: {
+    src: string
+    alt: string
+    containClass?: string
+}) {
+    if (!src) return null
+
+    // LOCAL
+    if (isLocal(src)) {
+        return (
+            <>
+                {/* backdrop fill */}
+                {/* <Image
+                    src={src}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    sizes="100vw"
+                    className="object-cover scale-110 blur-xl opacity-25"
+                    priority={false}
+                /> */}
+                {/* real image (no crop) */}
+                <Image
+                    src={src}
+                    alt={alt || "Image"}
+                    fill
+                    sizes="100vw"
+                    className={containClass}
+                    priority={false}
+                />
+            </>
+        )
+    }
+
+    // REMOTE (Next/Image allowed) — bypass optimizer for S3 to avoid timeouts/500s
+    if (isLikelyAllowedForNextImage(src)) {
+        const bypass = shouldBypassNextImageOptimization(src)
+        return (
+            <>
+                {/* <Image
+                    src={src}
+                    alt=""
+                    aria-hidden="true"
+                    fill
+                    sizes="100vw"
+                    className="object-cover scale-110 blur-xl opacity-25"
+                    priority={false}
+                    unoptimized={bypass}
+                /> */}
+                <Image
+                    src={src}
+                    alt={alt || "Image"}
+                    fill
+                    sizes="100vw"
+                    className={containClass} // object-contain
+                    priority={false}
+                    unoptimized={bypass}
+                />
+            </>
+        )
+    }
+
+    // UNKNOWN HOST fallback
+    return (
+        <>
+            <img
+                src={src}
+                alt=""
+                aria-hidden="true"
+                className="absolute inset-0 h-full w-full object-cover scale-110 blur-xl opacity-25"
+                loading="lazy"
+                referrerPolicy="no-referrer"
+            />
+            <img
+                src={src}
+                alt={alt || "Image"}
+                className={`absolute inset-0 h-full w-full ${containClass}`} // object-contain
+                loading="lazy"
+                referrerPolicy="no-referrer"
+            />
+        </>
+    )
+}
+
+
+
 
 
 /** This is your SAME overlay structure: Logo | Details | Image, with arrows + disable at ends. */
@@ -159,9 +312,9 @@ function ProjectOverlay({
                         type="button"
                         onClick={onClose}
                         aria-label="Close"
-                        className="absolute right-3 top-3 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur hover:opacity-95"
+                        className="absolute right-1 top-1 z-20 inline-flex h-10 w-10 lg:h-14 lg:w-14 items-center justify-center rounded-full border border-[rgb(var(--border))] bg-black/60 hover:opacity-95"
                     >
-                        <FiX className="h-5 w-5 text-[rgb(var(--fg))]" />
+                        <FiX className="h-10 w-10 text-white" />
                     </button>
 
                     {/* Image count (absolute) */}
@@ -174,8 +327,8 @@ function ProjectOverlay({
                         <div className="grid min-h-full md:h-full md:grid-cols-12">
                             {/* Logo */}
                             <div className="md:col-span-2 border-b border-[rgb(var(--border))] md:border-b-0 md:border-r bg-[rgb(var(--card))]">
-                                <div className="flex h-full items-center justify-center p-4 md:p-0 md:pt-10">
-                                    <div className="relative h-24 w-40 md:h-44 md:w-[95%]">
+                                <div className="flex h-full      justify-center p-4">
+                                    <div className="relative h-24 w-40 md:h-44 md:w-full">
                                         <Image
                                             src="/images/aoalogo.png"
                                             alt="Company logo"
@@ -195,7 +348,7 @@ function ProjectOverlay({
                                     <div className="px-3 py-3">
                                         <div className="text-2xl font-semibold text-[rgb(var(--fg))]">{project?.title || "—"}</div>
 
-                                       
+
 
 
                                     </div>
@@ -219,9 +372,9 @@ function ProjectOverlay({
                             {/* Image */}
                             <div className="md:col-span-7 bg-[rgb(var(--card))]">
                                 {/* On mobile we give the image its own height so it shows after details */}
-                                <div className="relative h-[44vh] min-h-[280px] md:h-full w-full">
+                                <div className="relative h-[44vh] min-h-70 bg-green-400 md:h-full w-full">
                                     {img?.url ? (
-                                        <div className="absolute h-full w-full inset-0">
+                                        <div className="absolute h-full bg-white/80 w-full inset-0">
                                             {/* KEY FIX: no cropping */}
                                             <MediaNoCropFill src={img.url} alt={img.alt || "Project image"} containClass="object-contain" />
                                         </div>
@@ -238,12 +391,12 @@ function ProjectOverlay({
                                         disabled={!canPrev}
                                         aria-label="Previous"
                                         className={[
-                                            "absolute left-3 top-1/2 -translate-y-1/2 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border",
-                                            "border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur",
+                                            "absolute left-3 top-1/2 -translate-y-1/2 z-20 inline-flex h-10 w-10 lg:h-16 lg:w-16 items-center justify-center rounded-full border",
+                                            "border-[rgb(var(--border))] bg-black/60",
                                             !canPrev ? "opacity-35 cursor-not-allowed" : "hover:opacity-95",
                                         ].join(" ")}
                                     >
-                                        <FiChevronLeft className="h-5 w-5 text-[rgb(var(--fg))]" />
+                                        <FiChevronLeft className="h-5 w-5 lg:h-10 lg:w-10 text-white" />
                                     </button>
 
                                     <button
@@ -252,12 +405,12 @@ function ProjectOverlay({
                                         disabled={!canNext}
                                         aria-label="Next"
                                         className={[
-                                            "absolute right-3 top-1/2 -translate-y-1/2 z-20 inline-flex h-11 w-11 items-center justify-center rounded-full border",
-                                            "border-[rgb(var(--border))] bg-[rgba(255,255,255,0.85)] backdrop-blur",
+                                            "absolute right-3 top-1/2 -translate-y-1/2 z-20 inline-flex h-10 w-10 lg:h-16 lg:w-16 items-center justify-center rounded-full border",
+                                            "border-[rgb(var(--border))] bg-black/60",
                                             !canNext ? "opacity-35 cursor-not-allowed" : "hover:opacity-95",
                                         ].join(" ")}
                                     >
-                                        <FiChevronRight className="h-5 w-5 text-[rgb(var(--fg))]" />
+                                        <FiChevronRight className="h-5 w-5 lg:h-10 lg:w-10 text-white" />
                                     </button>
                                 </div>
                             </div>
@@ -270,15 +423,109 @@ function ProjectOverlay({
     )
 }
 
+// export function ProjectsGridWithOverlay({ projects }: { projects: ProjectLite[] }) {
+//     const [open, setOpen] = useState(false)
+//     const [loading, setLoading] = useState(false)
+//     const [activeSlug, setActiveSlug] = useState<string | null>(null)
+//     const [activeProject, setActiveProject] = useState<any | null>(null)
+
+//     async function openFromProject(p: ProjectLite) {
+//         setOpen(true)
+//         setActiveSlug(p.slug)
+//         setLoading(true)
+//         setActiveProject(null)
+
+//         try {
+//             const res = await fetch(`/api/public/projects/${encodeURIComponent(p.slug)}`, { cache: "no-store" })
+//             const j = await res.json().catch(() => null)
+//             if (!res.ok) throw new Error(j?.error || "Failed to load project")
+//             setActiveProject(j)
+//         } catch {
+//             // Keep overlay open; show minimal project data
+//             setActiveProject({ slug: p.slug, title: p.title, location: p.location, year: p.year, images: [] })
+//         } finally {
+//             setLoading(false)
+//         }
+//     }
+
+//     function close() {
+//         setOpen(false)
+//         setActiveSlug(null)
+//     }
+
+//     return (
+//         <>
+//             {/* Grid cards (same look as your current ProjectCard) */}
+//             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+//                 {projects.map((project) => {
+//                     const rawCover = project.images?.[0]?.url || project.coverImageUrl || ""
+//                     const cover = rawCover ? unwrapCdnUrl(rawCover) : ""
+
+//                     return (
+//                         <button
+//                             key={project.id}
+//                             type="button"
+//                             onClick={() => openFromProject(project)}
+//                             className={[
+//                                 "group block w-full text-left overflow-hidden rounded border border-[rgb(var(--border))]",
+//                                 "bg-[rgb(var(--card))] shadow-[0_0_0_0_rgba(0,0,0,0)]",
+//                                 "transition hover:-translate-y-0.5 hover:shadow-md",
+//                             ].join(" ")}
+//                         >
+//                             <div className="relative aspect-4/3 w-full bg-[rgb(var(--card-2))]">
+//                                 {cover ? (
+//                                     // KEY FIX: no cropping on the card either
+//                                     <MediaNoCropFill src={cover} alt={project.title || "Project image"} containClass="object-contain" />
+//                                 ) : (
+//                                     <div className="flex h-full items-center justify-center text-sm font-medium text-[rgb(var(--muted))]">
+//                                         No image
+//                                     </div>
+//                                 )}
+//                             </div>
+
+//                             <div className="p-4">
+//                                 <div className="text-2xl md:text-3xl font-semibold tracking-tight text-green-800">
+//                                     {project.title}
+//                                 </div>
+
+//                                 {project.summary ? (
+//                                     <div className="mt-2 line-clamp-2 text-xl leading-relaxed font-medium text-gray-700">
+//                                         {project.summary}
+//                                     </div>
+//                                 ) : null}
+//                             </div>
+//                         </button>
+//                     )
+//                 })}
+//             </div>
+
+//             {/* Optional small loading hint (doesn't change overlay layout) */}
+//             {open && loading ? (
+//                 <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] rounded-full border border-[rgb(var(--border))] bg-white/90 px-4 py-2 text-sm font-semibold text-[rgb(var(--fg))] backdrop-blur">
+//                     Loading project…
+//                 </div>
+//             ) : null}
+
+//             {/* Your overlay */}
+//             <ProjectOverlay open={open} onClose={close} project={activeProject} />
+//         </>
+//     )
+// }
+
 export function ProjectsGridWithOverlay({ projects }: { projects: ProjectLite[] }) {
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [activeSlug, setActiveSlug] = useState<string | null>(null)
     const [activeProject, setActiveProject] = useState<any | null>(null)
+
+    // summary expand state per card
+    const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+
+    function toggleExpanded(id: string) {
+        setExpanded((prev) => ({ ...prev, [id]: !prev[id] }))
+    }
 
     async function openFromProject(p: ProjectLite) {
         setOpen(true)
-        setActiveSlug(p.slug)
         setLoading(true)
         setActiveProject(null)
 
@@ -288,7 +535,6 @@ export function ProjectsGridWithOverlay({ projects }: { projects: ProjectLite[] 
             if (!res.ok) throw new Error(j?.error || "Failed to load project")
             setActiveProject(j)
         } catch {
-            // Keep overlay open; show minimal project data
             setActiveProject({ slug: p.slug, title: p.title, location: p.location, year: p.year, images: [] })
         } finally {
             setLoading(false)
@@ -297,16 +543,18 @@ export function ProjectsGridWithOverlay({ projects }: { projects: ProjectLite[] 
 
     function close() {
         setOpen(false)
-        setActiveSlug(null)
     }
 
     return (
         <>
-            {/* Grid cards (same look as your current ProjectCard) */}
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {/* No “air gaps”: use 1px separators instead of spacing */}
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {projects.map((project) => {
                     const rawCover = project.images?.[0]?.url || project.coverImageUrl || ""
                     const cover = rawCover ? unwrapCdnUrl(rawCover) : ""
+                    const isExpanded = !!expanded[project.id]
+                    const summary = (project.summary || "").trim()
+                    const showMore = summary.length > 140
 
                     return (
                         <button
@@ -314,15 +562,25 @@ export function ProjectsGridWithOverlay({ projects }: { projects: ProjectLite[] 
                             type="button"
                             onClick={() => openFromProject(project)}
                             className={[
-                                "group block w-full text-left overflow-hidden rounded border border-[rgb(var(--border))]",
-                                "bg-[rgb(var(--card))] shadow-[0_0_0_0_rgba(0,0,0,0)]",
-                                "transition hover:-translate-y-0.5 hover:shadow-md",
+                                "group w-full text-left",
+                                "transition hover:relative shadow hover:z-10 hover:shadow-md",
+                                "focus:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(var(--accent),0.35)]",
                             ].join(" ")}
                         >
-                            <div className="relative aspect-4/3 w-full bg-[rgb(var(--card-2))]">
+                            {/* MEDIA (full-bleed, no padding) */}
+                            <div className="relative h-56 w-full overflow-hidden sm:h-60 md:h-64">
                                 {cover ? (
-                                    // KEY FIX: no cropping on the card either
-                                    <MediaNoCropFill src={cover} alt={project.title || "Project image"} containClass="object-contain" />
+                                    //   <MediaFillOne
+                                    //     src={cover}
+                                    //     alt={project.title || "Project image"}
+                                    //     className="object-cover" // fills media area fully
+                                    //   />
+                                    <MediaContainWithBackdropOne
+                                        src={cover}
+                                        alt={project.title || "Project image"}
+                                        containClass="object-contain object-bottom"
+                                    />
+
                                 ) : (
                                     <div className="flex h-full items-center justify-center text-sm font-medium text-[rgb(var(--muted))]">
                                         No image
@@ -330,30 +588,49 @@ export function ProjectsGridWithOverlay({ projects }: { projects: ProjectLite[] 
                                 )}
                             </div>
 
-                            <div className="p-4">
-                                <div className="text-2xl md:text-3xl font-semibold tracking-tight text-green-800">
+                            {/* DETAILS (separate div) */}
+                            <div className="flex h-full text-center flex-col px-4 py-3">
+                                <div className="text-xl font-semibold tracking-tight text-green-800 md:text-2xl line-clamp-2">
                                     {project.title}
                                 </div>
 
-                                {project.summary ? (
-                                    <div className="mt-2 line-clamp-2 text-xl leading-relaxed font-medium text-gray-700">
-                                        {project.summary}
-                                    </div>
+                                {summary ? (
+                                    <>
+                                        <div className={["mt-2 text-base font-medium text-gray-700", isExpanded ? "" : "line-clamp-3"].join(" ")}>
+                                            {summary}
+                                        </div>
+
+                                        {showMore ? (
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.preventDefault()
+                                                    e.stopPropagation() // IMPORTANT: don’t open overlay
+                                                    toggleExpanded(project.id)
+                                                }}
+                                                className="mt-2 w-fit text-sm font-semibold text-green-800 underline underline-offset-4 hover:opacity-85"
+                                                aria-expanded={isExpanded}
+                                            >
+                                                {isExpanded ? "Less" : "More"}
+                                            </button>
+                                        ) : null}
+                                    </>
                                 ) : null}
+
+                                {/* optional: keep bottom alignment consistent if you later add meta */}
+                                <div className="mt-auto" />
                             </div>
                         </button>
                     )
                 })}
             </div>
 
-            {/* Optional small loading hint (doesn't change overlay layout) */}
             {open && loading ? (
-                <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[60] rounded-full border border-[rgb(var(--border))] bg-white/90 px-4 py-2 text-sm font-semibold text-[rgb(var(--fg))] backdrop-blur">
+                <div className="fixed bottom-4 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-[rgb(var(--border))] bg-white/90 px-4 py-2 text-sm font-semibold text-[rgb(var(--fg))] backdrop-blur">
                     Loading project…
                 </div>
             ) : null}
 
-            {/* Your overlay */}
             <ProjectOverlay open={open} onClose={close} project={activeProject} />
         </>
     )

@@ -1,14 +1,24 @@
+// src/app/admin/projects/page.tsx (or your current path)
+
 export const dynamic = "force-dynamic"
 export const revalidate = 0
+
 import Link from "next/link"
 import { prisma } from "@/src/lib/prisma"
 import { requireAdmin } from "@/src/lib/admin"
+import AdminProjectsReorderList from "./AdminProjectsReorderList" // <-- add this
 
 export const runtime = "nodejs"
 
 export default async function AdminProjectsPage() {
   await requireAdmin()
-  const projects = await prisma.project.findMany({ orderBy: { updatedAt: "desc" } })
+
+  const projects = await prisma.project.findMany({
+    orderBy: [
+      { sortOrder: "asc" },  // <-- add this (after you add sortOrder field)
+      { updatedAt: "desc" },
+    ],
+  })
 
   return (
     <div className="rounded-2xl border border-[rgb(var(--border))] bg-[rgb(var(--bg))] p-6 shadow-sm">
@@ -28,36 +38,8 @@ export default async function AdminProjectsPage() {
 
       <div className="mt-6 overflow-hidden rounded-xl border border-[rgb(var(--border))]">
         <div className="divide-y divide-[rgb(var(--border))] bg-[rgb(var(--bg))]">
-          {projects.map((p) => (
-            <div key={p.id} className="flex items-center justify-between gap-4 px-4 py-3">
-              <div className="min-w-0">
-                <div className="truncate text-sm font-semibold text-[rgb(var(--fg))]">{p.title}</div>
-                <div className="mt-0.5 text-xs text-[rgb(var(--muted))]">
-                  {p.status} • <span className="font-mono">/projects/{p.slug}</span>
-                </div>
-              </div>
-
-              <div className="flex shrink-0 items-center gap-2">
-                <Link
-                  href={`/admin/projects/${p.id}`}
-                  className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm text-[rgb(var(--fg))] transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
-                >
-                  View
-                </Link>
-
-                <Link
-                  href={`/admin/projects/${p.id}/edit`}
-                  className="rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--bg))] px-3 py-1 text-sm text-[rgb(var(--fg))] transition-colors hover:border-[rgb(var(--accent))] hover:bg-[rgb(var(--accent-soft))] hover:text-[rgb(var(--accent))]"
-                >
-                  Edit
-                </Link>
-              </div>
-            </div>
-          ))}
-
-          {!projects.length ? (
-            <div className="px-4 py-8 text-sm text-[rgb(var(--muted))]">No projects yet.</div>
-          ) : null}
+          {/* Replace the old .map(...) with this */}
+          <AdminProjectsReorderList initialProjects={projects as any} />
         </div>
       </div>
     </div>
